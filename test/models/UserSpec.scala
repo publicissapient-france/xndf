@@ -18,11 +18,11 @@ class UserSpec extends Specification {
   "User model" should {
     "be retrieved by id" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-	    import play.api.Play.current
+/*	    import play.api.Play.current
         DB.withConnection { implicit connection =>
 	      SQL("insert into users(id,firstName, lastName, email) values(1,'nadia','play','nadia@example.com')").executeUpdate()
-	    }
-        val Some(user)=User.findById(1)        
+	    }*/
+        val Some(user)=User.findById(1000)
         user.firstName must equalTo("nadia")
       }
     }
