@@ -16,15 +16,23 @@ class UserSpec extends Specification {
   import models.User
 
   "User model" should {
+    "must save a user" in {
+
+      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
+        user1.save() === 1001 and
+        User.count() === 2
+      }
+    }
     "be retrieved by id" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-/*	    import play.api.Play.current
-        DB.withConnection { implicit connection =>
-	      SQL("insert into users(id,firstName, lastName, email) values(1,'nadia','play','nadia@example.com')").executeUpdate()
-	    }*/
         val Some(user)=User.findById(1000)
         user.firstName must equalTo("nadia")
       }
     }
+    "be converted from and to json" in {
+      User.fromJson(user2.toJson()) === Right(user2)
+    }
   }
+  private val user1 = User(NotAssigned, "firstname", "lastname", "email")
+  private val user2 = User(Id(1), "firstname", "lastname", "email")
 }

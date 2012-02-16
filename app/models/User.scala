@@ -4,16 +4,20 @@ import anorm.SqlParser._
 
 import play.api.db._
 import play.api.Play.current
+import play.api.libs.json._
 
 case class User(id: Pk[Long], firstName: String, lastName: String, email: String) {
   def save() = {
     DB.withConnection { implicit connection =>
-      val id = SQL("select next value for users_seq").as(scalar[Long].single)
+      val newId = SQL("select next value for users_seq").as(scalar[Long].single)
       SQL("insert into users (id, firstname, lastname, email) values ({id}, {firstname}, {lastname}, {email})")
-        .on('id -> id, 'firstname -> firstName, 'lastname -> lastName, 'email -> email).executeUpdate()
+        .on('id -> newId, 'firstname -> firstName, 'lastname -> lastName, 'email -> email).executeUpdate()
+      newId
     }
-    id
   }
+
+  def toJson() = JsObject(Seq("id" -> JsNumber(id.get), "firstname" -> JsString(firstName), "lastname" -> JsString(lastName),
+    "email" -> JsString(email)))
 }
 
 object User {
@@ -40,6 +44,19 @@ object User {
   def count() = {
     DB.withConnection { implicit connection =>
       SQL("select count(1) from users").as(scalar[Long].single)
+    }
+  }
+
+  def fromJson(json:JsValue):Either[String, User] = {
+    try {
+      Right(User(
+        Id((json \ "id").as[Long]),
+        (json \ "firstname").as[String],
+        (json \ "lastname").as[String],
+        (json \ "email").as[String]
+      ))
+    } catch {
+      case e:Exception => Left("Perdu" + e)
     }
   }
 }
