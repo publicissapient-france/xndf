@@ -19,14 +19,58 @@ Roadmap
 
 Developper sur X-NDF
 ----------
+### Prérequis
 Le strict minimum est d'avoir une jvm, sbt 0.11.2 et un éditeur de texte. Le reste est téléchargé par le projet.
+Quelque soit votre mode de développement préféré il faut commencer par lancer `sbt` depuis la racine et mettre à jour les dépendances :
 
-Si vous souhaitez développer dans un IDE, vous pouvez utiliser au choix ScalaIDE (basé sur eclipse) ou IntelliJ dont la version community edition supporte le plugin scala.
+    $ sbt
+    [info] Loading global plugins from D:\programs\Java\sbt\plugins
+    [info] Loading project definition from D:\devel\perso\xndf\project
+    [info] Set current project to Xndf (in build file:/D:/devel/perso/xndf/)
+    sbt (Xndf)> update
 
-Placez vous à la racine du projet et tapez sbt quand le prompt de sbt est disponible, vous n'avez plus qu'a taper au choix
+### Lancer la console play
+Toujours depuis la racine du projet lancez `sbt play` :
 
-- gen-idea 
-- eclipsify
+    $ sbt play
+    [info] Loading global plugins from D:\programs\Java\sbt\plugins
+    [info] Loading project definition from D:\devel\perso\xndf\project
+    [info] Set current project to Xndf (in build file:/D:/devel/perso/xndf/)
+           _            _
+     _ __ | | __ _ _  _| |
+    | '_ \| |/ _' | || |_|
+    |  __/|_|\____|\__ (_)
+    |_|            |__/
+    
+    play! 2.0, http://www.playframework.org
+    
+    > Type "help play" or "license" for more information.
+    > Type "exit" or use Ctrl+D to leave this console.
+    
+    sbt (Xndf)>
+### Configurer un IDE
+Play supporte en natif la configuration des deux plux gros IDE java : [Eclipse (ScalaIDE)](http://scala-ide.org/download/current.html), [IntelliJ (Community suffit)](http://confluence.jetbrains.net/display/IDEADEV/IDEA+11.1+EAP). Le détail des instructions est là http://www.playframework.org/documentation/2.0/IDE , en court il s'agit de lancer la console play et d'utiliser au choix: `eclipsify` ou `idea`. Il est également possible d'utiliser netbeans avec quelques étapes supplémentaires. 
+    
+    sbt (Xndf)> idea
+    [info] Compiling 7 Scala sources and 1 Java source to D:\devel\perso\xndf\target\scala-2.9.1\classes...
+    [warn]        _            _
+    [warn]  _ __ | | __ _ _  _| |
+    [warn] | '_ \| |/ _' | || |_|
+    [warn] |  __/|_|\____|\__ (_)
+    [warn] |_|            |__/
+    [warn]
+    [warn] play! 2.0, http://www.playframework.org
+    [info] ...about to generate an Intellij project module(SCALA) called xndf.iml
+    [warn] xndf.iml was generated
+    [warn] If you see unresolved symbols, you might need to run compile first.
+    [warn] Have fun!
+    [success] Total time: 9 s, completed 22 mars 2012 13:49:27
+    sbt (Xndf)>
 
-pour générer la configuration pour votre IDE préféré et à charger le projet dans l'IDE de votre choix. 
- 
+### Les commandes utiles : 
+
+- `update` met à jour les dépendances
+- `compile` compile l'application
+- `test` joue les tests unitaires
+- `~ [command]` joue [command] en continu (compile et test sont de bonnes idées)
+- `run` lance l'application
