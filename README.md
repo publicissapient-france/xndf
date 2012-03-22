@@ -17,11 +17,11 @@ Roadmap
 ### Epics de la v3.0
 - intégration avec google OCR pour tenter de générer la ligne de note de frais automatiquement depuis l'image du justif
 
-Developper sur X-NDF
+Developper sur X-NDF server
 ----------
 ### Prérequis
-Le strict minimum est d'avoir une jvm, sbt 0.11.2 et un éditeur de texte. Le reste est téléchargé par le projet.
-Quelque soit votre mode de développement préféré il faut commencer par lancer `sbt` depuis la racine et mettre à jour les dépendances :
+Le strict minimum est d'avoir une jvm, sbt 0.11.2, un clone du projet et un éditeur de texte.
+Quelque soit votre mode de développement préféré il faut commencer par lancer `sbt` depuis le dossier server du workspace et mettre à jour les dépendances :
 
     $ sbt
     [info] Loading global plugins from D:\programs\Java\sbt\plugins
@@ -74,3 +74,8 @@ Play supporte en natif la configuration des deux plux gros IDE java : [Eclipse (
 - `test` joue les tests unitaires
 - `~ [command]` joue [command] en continu (compile et test sont de bonnes idées)
 - `run` lance l'application
+
+Developper sur X-NDF front
+----------
+
+Pas la moindre idée pour l'instant : TODO
