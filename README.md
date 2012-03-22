@@ -21,9 +21,10 @@ Developper sur X-NDF
 ----------
 Le strict minimum est d'avoir une jvm, sbt 0.11.2 et un éditeur de texte. Le reste est téléchargé par le projet.
 
-Si vous souhaitez développer dans un IDE, vous pouvez utiliser au choix ScalaIDE (basé sur eclipse) ou IntelliJ dont la version community edition supporte le plugin scala. 
+Si vous souhaitez développer dans un IDE, vous pouvez utiliser au choix ScalaIDE (basé sur eclipse) ou IntelliJ dont la version community edition supporte le plugin scala.
 
-Placez vous à la racine du projet et tapez sbt quand le prompt de sbt est disponible, vous n'avez plus qu'a taper au choix :
+Placez vous à la racine du projet et tapez sbt quand le prompt de sbt est disponible, vous n'avez plus qu'a taper au choix
+
 - gen-idea 
 - eclipsify
 
