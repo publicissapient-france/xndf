@@ -28,6 +28,8 @@ Quelque soit votre mode de développement préféré il faut commencer par lance
     [info] Loading project definition from D:\devel\perso\xndf\project
     [info] Set current project to Xndf (in build file:/D:/devel/perso/xndf/)
     sbt (Xndf)> update
+    sbt (Xndf)> update-classifiers 
+La seconde commande est optionnelle mais permet de télécharger les sources et les javadocs (pour les artéfacts qui les ont publiés). 
 
 ### Lancer la console play
 Toujours depuis la racine du projet lancez `sbt play` :
@@ -49,9 +51,31 @@ Toujours depuis la racine du projet lancez `sbt play` :
     
     sbt (Xndf)>
 ### Configurer un IDE
-Play supporte en natif la configuration des deux plux gros IDE java : [Eclipse (ScalaIDE)](http://scala-ide.org/download/current.html), [IntelliJ (Community suffit)](http://confluence.jetbrains.net/display/IDEADEV/IDEA+11.1+EAP). Le détail des instructions est là http://www.playframework.org/documentation/2.0/IDE , en court il s'agit de lancer la console play et d'utiliser au choix: `eclipsify` ou `idea`. Il est également possible d'utiliser netbeans avec quelques étapes supplémentaires. 
+Play supporte en natif la configuration des deux plux gros IDE java : [Eclipse (ScalaIDE)](http://scala-ide.org/download/current.html), [IntelliJ (Community suffit)](http://confluence.jetbrains.net/display/IDEADEV/IDEA+11.1+EAP). Le détail des instructions pour eclipse est là http://www.playframework.org/documentation/2.0/IDE , en court il s'agit de lancer la console play et d'utiliser `eclipsify` 
     
-    sbt (Xndf)> idea
+    sbt (Xndf)> eclipsify
+    [info] Compiling 7 Scala sources and 1 Java source to D:\devel\perso\xndf\target\scala-2.9.1\classes...
+    [warn]        _            _
+    [warn]  _ __ | | __ _ _  _| |
+    [warn] | '_ \| |/ _' | || |_|
+    [warn] |  __/|_|\____|\__ (_)
+    [warn] |_|            |__/
+    [warn]
+    [warn] play! 2.0, http://www.playframework.org
+    [info] ...about to generate an Intellij project module(SCALA) called xndf.iml
+    [warn] xndf.iml was generated
+    [warn] If you see unresolved symbols, you might need to run compile first.
+    [warn] Have fun!
+    [success] Total time: 9 s, completed 22 mars 2012 13:49:27
+    sbt (Xndf)>
+    
+Pour IntelliJ, c'est un tout petit peu plus compliqué parceque le support dans play est plus que sommaire. Je vous conseille plutôt d'utiliser le plugin sbt-idea. Pour cela il faut créer le fichier ~/.sbt/plugins/build.sbt avec le contenu suivant : 
+
+    resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
+    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
+puis aller dans la console play et taper gen-idea
+
+    sbt (Xndf)> gen-idea
     [info] Compiling 7 Scala sources and 1 Java source to D:\devel\perso\xndf\target\scala-2.9.1\classes...
     [warn]        _            _
     [warn]  _ __ | | __ _ _  _| |
