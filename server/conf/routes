@@ -4,7 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /user/:id                   controllers.UserController.user(id:Long)
+GET     /user/:id                   controllers.UserController.show(id:Long)
+GET     /users                      controllers.UserController.index
 
 # Authentication
 GET     /login                      controllers.Application.login

@@ -17,10 +17,7 @@ case class User(id: Pk[Long], name: String, email: String, verifiedId: String) {
     }
   }
 
-  def toJson() = JsObject(Seq("id" -> JsNumber(id.get), "name" -> JsString(name),
-    "email" -> JsString(email)))
 }
-
 object User {
 
   /**
@@ -33,6 +30,11 @@ object User {
 	  get[String]("users.verifiedId") map {
 	    case id ~ name ~ email ~ verifiedId => User(id, name, email, verifiedId)
 	  }
+  }
+  def findAll()={
+    DB.withConnection { implicit connection =>
+      SQL("select * from users").list(User.simple)
+    }
   }
 
   def findById(id: Long): Option[User] = {
@@ -82,16 +84,24 @@ object User {
     }
   }
 
-  def fromJson(json:JsValue, verifiedId: String):Either[String, User] = {
-    try {
-      Right(User(
+  implicit object UserFormat extends Format[User] {
+
+    def reads(json: JsValue): User = {
+      User(
         Id((json \ "id").as[Long]),
         (json \ "name").as[String],
         (json \ "email").as[String],
-        verifiedId)
-      )
-    } catch {
-      case e:Exception => Left("Perdu" + e)
+        (json \ "verifiedId").as[String])
     }
+
+    //unmarshaling to JSValue is covered in the next paragraph
+
+    def writes(u: User): JsValue = JsObject(
+      Seq("id" -> JsNumber(u.id.get),
+        "name" -> JsString(u.name),
+        "email" -> JsString(u.email),
+        "verifiedId" ->JsString(u.verifiedId)
+      )
+    )
   }
 }
