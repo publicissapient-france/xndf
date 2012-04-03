@@ -14,13 +14,11 @@ import play.api.libs.concurrent.Redeemed
 
 object Application extends Controller with Secured {
 
-  def index = IsAuthenticated { userId => implicit request =>
-    val user: User = User.findByVerifiedId(userId).get
-    Ok(html.index(user))
+  def index = Action {
+    Ok(html.index())
   }
 
-  val loginForm = Form(
-    "user" -> text)
+  val loginForm = Form("user" -> text)
 
   def login = Action { implicit request =>
     Ok(html.login(loginForm))
@@ -86,7 +84,7 @@ object Application extends Controller with Secured {
    * Logout and clean the session.
    */
   def logout = Action {
-    Redirect(routes.Application.login).withNewSession.flashing(
+    Redirect(routes.Application.index).withNewSession.flashing(
       "success" -> "You've been logged out")
   }
 
