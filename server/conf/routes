@@ -3,8 +3,14 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
-GET     /user/:id                   controllers.Application.user(id:Long)
+GET     /                           controllers.Application.index
+GET     /user/:id                   controllers.UserController.user(id:Long)
+
+# Authentication
+GET     /login                      controllers.Application.login
+POST    /authenticate               controllers.Application.authenticate
+GET     /logout                     controllers.Application.logout
+GET 	/openIDCallback				controllers.Application.openIDCallback
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
