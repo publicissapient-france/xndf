@@ -8,9 +8,4 @@ import play.api.{Application, GlobalSettings}
 
 object Global extends GlobalSettings {
 
-  override def onStart(app: Application) {
-    if (User.count() == 0) {
-      User(NotAssigned, "nadia","play","nadia@example.com").save()
-    }
-  }
 }
