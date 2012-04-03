@@ -1,0 +1,5 @@
+package utils
+
+trait BasicAuth {
+
+}

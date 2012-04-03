@@ -6,9 +6,9 @@ set ignorecase true;
 
 create table users (
   id                        bigint not null,
-  firstname                      varchar(255) not null,
-  lastname                      varchar(255) not null,
+  name                      varchar(255),
   email	                      varchar(255) not null,
+  verifiedId				varchar(255) not null,
   constraint pk_user primary key (id))
 ;
 
