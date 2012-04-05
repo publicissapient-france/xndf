@@ -3,16 +3,14 @@ package models
 import org.specs2.mutable.Specification
 import play.api.test._
 import play.api.test.Helpers._
-import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
-import play.api.db.DB
 import anorm._
-import anorm.SqlParser._
-import play.api.Logger
+import play.api.libs.json.Json._
 
 class UserSpec extends Specification {
 
   import models.User
+  import models.User._
+
 
   "User model" should {
     "save a user" in {
@@ -41,7 +39,7 @@ class UserSpec extends Specification {
     }
 
     "be converted from and to json" in {
-      User.fromJson(user2.toJson(), "id2") === Right(user2)
+      fromJson(toJson(user2)) === user2
     }
 
     "be created and saved in the database" in {
