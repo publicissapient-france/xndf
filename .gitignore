@@ -6,3 +6,4 @@ tmp
 .target
 .cache
 .history
+.idea*

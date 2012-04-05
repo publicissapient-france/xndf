@@ -18,15 +18,14 @@ object Application extends Controller with Secured {
     Ok(html.index())
   }
 
-  val loginForm = Form("user" -> text)
+  val loginForm = Form("user" -> nonEmptyText)
 
   def login = Action { implicit request =>
     Ok(html.login(loginForm))
   }
 
   def authenticate = Action { implicit request =>
-    Form(single(
-      "user" -> nonEmptyText)).bindFromRequest.fold(
+    loginForm.bindFromRequest.fold(
       error => {
         Logger.info("bad request " + error.toString)
         BadRequest(error.toString)
