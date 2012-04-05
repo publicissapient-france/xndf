@@ -12,11 +12,12 @@ var AppRouter = Backbone.Router.extend({
 
     home:function () {
         // Since the home view never changes, we instantiate it and render it only once
-        if (!this.homeView) {
-            this.homeView = new App.views.HomeView();
-            this.homeView.render();
+        var users = new App.models.UserCollection();
+        if (!this.usersListView) {
+            this.usersListView = new App.views.UserListView({model:users});
+            this.usersListView.render();
         }
-        $('#content').html(this.homeView.el);
+        $('#content').html(this.usersListView.el);
     },
 
     userlist:function () {
