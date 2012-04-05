@@ -6,3 +6,6 @@ tmp
 .target
 .cache
 .history
+*.db
+.idea
+.idea_modules
