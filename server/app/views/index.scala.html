@@ -1,5 +1,25 @@
-@(user: User)
+@main("Xndf") {
 
-@main("Welcome to Play 2.0 RC1") {
-    <h1>@(user.name)</h1>
+
+<div>List our <a href="javascript:showUsers()">users</a></div>
+<div class="header"></div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div id="content" class="span12>"></div>
+    </div>
+</div>
+
+<script src='@routes.Assets.at("javascripts/lib/jquery-1.7.1.min.js")'></script>
+<script src='@routes.Assets.at("javascripts/lib/underscore.js")'></script>
+<script src='@routes.Assets.at("javascripts/lib/backbone.js")'></script>
+
+<script src='@routes.Assets.at("javascripts/base.js")'></script>
+<script src='@routes.Assets.at("javascripts/models/usermodel.js")'></script>
+<script src='@routes.Assets.at("javascripts/views/home.js")'></script>
+<script src='@routes.Assets.at("javascripts/views/userlist.js")'></script>
+<script src='@routes.Assets.at("javascripts/views/userdetails.js")'></script>
+
+<script src='@routes.Assets.at("javascripts/main.js")'></script>
+
 }
