@@ -1,55 +1,20 @@
-App.views.UserListView = Backbone.View.extend({
+define([
+    'jQuery',
+    'Underscore',
+    'Backbone',
+    'models/user',
+    'text!../../tpl/user-list-item.html'
+], function($, _, Backbone, user, userItemTemplate){
+    var userItemView = Backbone.View.extend({
+        tagName:"div", // Not required since 'div' is the default if no el or tagName specified
 
-    tagName:'ul',
-
-    className:'nav nav-list',
-
-    initialize:function () {
-        this.template = _.template(tpl.get('user-list'));
-
-    },
-
-    render:function (eventName) {
-        var el=$(this.el);
-        el.empty();
-        var collection = this.model;
-        collection.fetch({success: function(){
-            _.each(collection.models, function (user) {
-                el.append(new App.views.UserListItemView({model:user}).render().el);
-            });
-        }});
-        return this;
-    }
-});
-
-App.views.UserListItemView = Backbone.View.extend({
-
-    tagName: "li",
-
-    className:"list-item",
-
-    initialize:function () {
-        this.template = _.template(tpl.get('user-list-item'));
-    },
-
-    render:function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-    }
-
-});
-
-App.views.UserDetailView = Backbone.View.extend({
-
-    tagName:"div", // Not required since 'div' is the default if no el or tagName specified
-
-    initialize:function () {
-        this.template = _.template(tpl.get('employee-details'));
-    },
-
-    render:function (eventName) {
-        $(this.el).html(this.template(this.model.toJSON()));
-        return this;
-    }
-
+        render:function (eventName) {
+            var el=$(this.el);
+            el.html(_.template( userItemTemplate,this.model.toJSON()));
+            return this;
+        }
+    });
+    // Our module now returns an instantiated view
+    // Sometimes you might return an un-instantiated view e.g. return projectListView
+    return userItemView;
 });
