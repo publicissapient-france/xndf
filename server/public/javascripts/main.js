@@ -1,48 +1,28 @@
-var AppRouter = Backbone.Router.extend({
-    views : App.views,
-    models: App.models,
-    routes:{
-        "":"home",
-        "users":"userlist",
-        "users/:id":"userdetail"
-    },
+// Filename: main.js
 
-    initialize:function () {
-    },
-
-    home:function () {
-        // Since the home view never changes, we instantiate it and render it only once
-        if (!this.homeView) {
-            this.homeView = new App.views.HomeView();
-            this.homeView.render();
-        }
-        $('#content').html(this.homeView.el);
-    },
-
-    userlist:function () {
-        var users = new this.models.UserCollection();
-        if (!this.usersListView) {
-            this.usersListView = new this.views.UserListView({model:users});
-            this.usersListView.render();
-        }
-        $('#content').html(this.usersListView.el);
-    },
-
-    userdetail:function (id) {
-        var user = new this.models.User({id:id});
-        user.fetch({
-            success:function (data) {
-                // Note that we could also 'recycle' the same instance of EmployeeFullView
-                // instead of creating new instances
-                $('#content').html(new this.views.UserDetailView({model:data}).render().el);
-            }
-        });
+// Require.js allows us to configure shortcut alias
+// There usage will become more apparent futher along in the tutorial.
+require.config({
+    paths: {
+        jQuery: 'libs/jquery/jquery.amd.plugin',
+        Underscore: 'libs/underscore/underscore.amd.plugin',
+        Backbone: 'libs/backbone/backbone.amd.plugin'
     }
 
 });
 
-tpl.loadTemplates(['home','user-list', 'user-details', 'user-list-item'],
-    function () {
-        app = new AppRouter();
-        Backbone.history.start();
-    });
+require([
+
+    // Load our app module and pass it to our definition function
+    'app',
+
+    // Some plugins have to be loaded in order due to there non AMD compliance
+    // Because these scripts are not "modules" they do not pass any values to the definition function below
+    'order!//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
+    'order!libs/underscore/underscore-min',
+    'order!libs/backbone/backbone-min'
+], function(App){
+    // The "app" dependency is passed in as "App"
+    // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
+    App.initialize();
+});
