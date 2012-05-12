@@ -6,3 +6,5 @@ tmp
 .target
 .cache
 .history
+dev.h2.db
+dev.trace.db
