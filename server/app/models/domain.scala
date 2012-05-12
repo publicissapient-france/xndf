@@ -25,24 +25,49 @@ case class ExpenseLine(id: Pk[Long],
                        expense: Expense) {
 }
 
+object ExpenseLine {
+  implicit object ExpenseLineFormat extends Format[ExpenseLine]{
+    def reads(value: JsValue): ExpenseLine = {
+      ExpenseLine(
+        (value \ "id").as[Pk[Long]],
+        (value \ "expenseReportId").as[Pk[Long]],
+        (value \ "valueDate").as[Date],
+        (value \ "evidenceNumber").as[Int],
+        (value \ "account").as[String],
+        (value \ "description").as[String],
+        ((value \ "expenseType").as[String],(value \ "expense").as[Double])
+      )
+    }
+
+    def writes(line: ExpenseLine) = {
+      toJson(
+        Map(
+          "id" -> toJson(line.id),
+          "expenseReportId" -> toJson(line.expenseReportId),
+          "valueDate" -> toJson(line.valueDate),
+          "evidenceNumber" -> toJson(line.evidenceNumber),
+          "account" -> toJson(line.account),
+          "description" -> toJson(line.description),
+          "expense" -> toJson(line.expense.amount),
+          "expenseType" -> toJson(line.expense.qualifier)
+        )
+      )
+    }
+  }
+}
+
 object ExpenseReport {
 
-  implicit object ExpenseReportReads extends Reads[Pk[Long] => ExpenseReport] {
+  implicit object ExpenseReportReads extends Reads[ExpenseReport] {
     def reads(json: JsValue) = {
-      user: Pk[Long] =>
-        val id: Pk[Long] = (json \ "id").as[Pk[Long]]
-        val lines = ((json \ "lines") match {
-          case JsArray(list) => list
-          case _ => Seq()
-        }).map(ExpenseLine.readsJson(_, id))
-
         ExpenseReport(
-          id,
+          (json \ "id").as[Pk[Long]],
           (json \ "startDate").as[Date],
           (json \ "endDate").as[Date],
-          user,
-          lines
+          (json \ "userId").as[Pk[Long]],
+          (json \ "lines").as[Seq[ExpenseLine]]
         )
+
     }
   }
 
@@ -51,9 +76,10 @@ object ExpenseReport {
       toJson(
         Map(
           "id" -> toJson(report.id),
+          "userId" -> toJson(report.userId),
           "startDate" -> toJson(report.from),
           "endDate" -> toJson(report.to),
-          "lines" -> toJson(report.lines.map(ExpenseLine.writesJson(_)))
+          "lines" -> toJson(report.lines)
         )
       )
     }
@@ -61,52 +87,19 @@ object ExpenseReport {
 
 }
 
-object ExpenseLine {
-  def readsJson(value: JsValue, reportId: Pk[Long]): ExpenseLine = {
-    val qualifier = (value \ "expenseType").as[String]
-    val amount = (value \ "expense").as[Double]
-
-
-
-    ExpenseLine(
-      (value \ "id").as[Pk[Long]],
-      reportId,
-      (value \ "valueDate").as[Date],
-      (value \ "evidenceNumber").as[Int],
-      (value \ "account").as[String],
-      (value \ "description").as[String],
-      ((value \ "expenseType").as[String],(value \ "expense").as[Double])
-    )
-  }
-
-  def writesJson(line: ExpenseLine) = {
-        toJson(
-          Map(
-            "id" -> toJson(line.id),
-            "valueDate" -> toJson(line.valueDate),
-            "evidenceNumber" -> toJson(line.evidenceNumber),
-            "account" -> toJson(line.account),
-            "description" -> toJson(line.description),
-            "expense" -> toJson(line.expense.amount),
-            "expenseType" -> toJson(line.expense.qualifier)
-          )
-        )
-  }
-
-}
 
 object Expense {
 
   implicit def tupleToExpense(tuple: (String, Double)):Expense = {
-    val (q, a) = tuple
-    q match {
-      case "Lodging" => Lodging(a)
-      case "Transportation" => Transportation(a)
-      case "Gas" => Gas(a)
-      case "Meal" => Meal(a)
-      case "Phone" => Phone(a)
-      case "Internet" => Internet(a)
-      case "Other" => Other(a)
+    val (qualifier, amount) = tuple
+    qualifier match {
+      case "Lodging" => Lodging(amount)
+      case "Transportation" => Transportation(amount)
+      case "Gas" => Gas(amount)
+      case "Meal" => Meal(amount)
+      case "Phone" => Phone(amount)
+      case "Internet" => Internet(amount)
+      case "Other" => Other(amount)
     }
 
   }
