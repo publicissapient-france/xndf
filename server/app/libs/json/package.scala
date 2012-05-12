@@ -6,20 +6,21 @@ import play.api.libs.json._
 import play.api.libs.json.Json._
 import anorm.{NotAssigned, Id, Pk}
 
-package object json{
-  val ISO_8601_FORMATER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+package object json {
+  val ISO_8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
 
   implicit object DateWrites extends Writes[Date] {
-    def writes(d: Date) = JsString(ISO_8601_FORMATER.format(d))
+    def writes(d: Date) = JsString(ISO_8601_FORMATTER.format(d))
   }
 
   implicit object DateReads extends Reads[Date] {
 
-    def reads(json: JsValue) = {
-        json match {
-          case JsString(dateString) => ISO_8601_FORMATER.parse(dateString)
-          case _ => throw new RuntimeException("iso8601-formated (yyyy-MM-dd'T'HH:mm:ssZ) string expected")
-        }
+    def reads(json: JsValue): Date = {
+      json match {
+        case JsString(dateString) => ISO_8601_FORMATTER.parse(dateString)
+        case JsUndefined(error) => throw new RuntimeException("iso8601-formated (yyyy-MM-dd'T'HH:mm:ssZ) string expected, was JsUndefined : " + error)
+        case _ => throw new RuntimeException("iso8601-formated (yyyy-MM-dd'T'HH:mm:ssZ) string expected, was " + json)
+      }
     }
   }
 
@@ -40,4 +41,5 @@ package object json{
       }
     }
   }
+
 }
