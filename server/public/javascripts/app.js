@@ -3,7 +3,7 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
-    'router', // Request router.js
+    'router'
 ], function($, _, Backbone, Router){
     var initialize = function(){
         // Pass in our Router module and call it's initialize function
@@ -14,3 +14,10 @@ define([
         initialize: initialize
     };
 });
+
+var d;
+var j;
+require(["jQuery"], function($){
+    d=$;
+    j=$;
+})      ;

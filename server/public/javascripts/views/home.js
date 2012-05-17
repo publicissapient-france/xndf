@@ -2,31 +2,30 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
-    'models/usercollection',
-    'views/userdetails',
-    'text!../../tpl/home.html'
-], function($, _, Backbone, userCollection,userItemView, homeTemplate){
-    var HomeView = Backbone.View.extend({
-        el: $('#content'),
-        tagName:'ul',
-        className:'nav nav-list',
+    'models/expenses',
+    'views/expense-item',
+    'text!../../tpl/home.html' ],
+    function ($, _, Backbone, Expenses, ExpenseItemView, template) {
+        var HomeView = Backbone.View.extend({
+            events:{
+                "click #get":"render"
+            },
 
-        render: function(){
-            // Using Underscore we can compile our template with data
-            var el=$(this.el);
-            console.log("test " + el);
-            var data = new userCollection();
-            data.fetch({success: function(){
-                console.log("in callback");
-                _.each(data.models, function (user) {
-                    el.append(new userItemView({model:user}).render().el);
-                });
-            }});
-            var compiledTemplate = _.template( homeTemplate, data );
-            // Append our compiled template to this Views "el"
-            el.append( compiledTemplate );
-        }
+            render:function () {
+                this.setElement(_.template(template, this.model));
+                var table = this.$(".container tbody");
+                var data = this.model;
+                data.fetch({success:function () {
+                    table.empty();
+                    _.each(data.models, function (expense) {
+                        table.append(new ExpenseItemView({model:expense}).render().el);
+                    });
+                }});
+                $('#content').replaceWith(this.el);
+            }
+        });
+
+        var collection = new Expenses();
+        var homeView = new HomeView({model:collection});
+        return homeView;
     });
-    var homeView =  new HomeView;
-    return homeView;
-});
