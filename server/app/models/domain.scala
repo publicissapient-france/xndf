@@ -14,6 +14,9 @@ case class ExpenseReport(id: Pk[Long], from: Date, to: Date, userId: Pk[Long], _
     lazy val line: ExpenseLine = ExpenseLine(id, this.id, valueDate, account, description, expense)
     newParent
   }
+  def total={
+    lines.map(l => l.expense.amount).reduceLeft {_+_}
+  }
 }
 
 case class ExpenseLine(id: Pk[Long],
@@ -76,6 +79,7 @@ object ExpenseReport {
           "userId" -> toJson(report.userId),
           "startDate" -> toJson(report.from),
           "endDate" -> toJson(report.to),
+          "total" -> toJson(report.total),
           "lines" -> toJson(report.lines)
         )
       )
