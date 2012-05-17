@@ -13,13 +13,27 @@ object ExpenseReportController extends Controller with Secured {
         Id(1l) ->
           ExpenseReport(Id(1l), new Date(), new Date(), Id(1000), Seq(
             ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Telephone", Phone(19.99)),
-            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Internet", Internet(29.99))
+            ExpenseLine(Id(2l), Id(1l), new Date(), "Xebia", "Internet", Internet(29.99))
           ))
         ,
         Id(2l) ->
           ExpenseReport(Id(2l), new Date(), new Date(), Id(1000), Seq(
-            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Telephone", Lodging(95.00)),
-            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Internet", Transportation(120.00))
+            ExpenseLine(Id(1l), Id(2l), new Date(), "Xebia", "Telephone", Lodging(95.00)),
+            ExpenseLine(Id(2l), Id(2l), new Date(), "Xebia", "Internet", Transportation(120.00))
+          ))
+      ),
+      Id(1001l) ->
+      Map(
+        Id(3l) ->
+          ExpenseReport(Id(3l), new Date(), new Date(), Id(1000), Seq(
+            ExpenseLine(Id(1l), Id(3l), new Date(), "Xebia", "Free", Phone(19.99)),
+            ExpenseLine(Id(2l), Id(3l), new Date(), "Xebia", "ADSL", Internet(29.99))
+          ))
+        ,
+        Id(4l) ->
+          ExpenseReport(Id(4l), new Date(), new Date(), Id(1000), Seq(
+            ExpenseLine(Id(1l), Id(4l), new Date(), "Xebia", "Logement", Lodging(95.00)),
+            ExpenseLine(Id(2l), Id(4l), new Date(), "Xebia", "Transport", Transportation(120.00))
           ))
       )
   )
@@ -27,10 +41,10 @@ object ExpenseReportController extends Controller with Secured {
   def index = IsAuthenticated {
     userId => implicit request =>
       val allReports = for {
-        reports <- reportStore.values
-        report <- reports.values
-      } yield report
-      Ok(toJson(allReports.toSeq))
+        user <- User.findByVerifiedId(userId)
+        reports <- reportStore.get(user.id)
+      } yield reports.values
+      Ok(toJson(allReports.flatten.toSeq))
   }
 
   def show(id: Long) = IsAuthenticated {

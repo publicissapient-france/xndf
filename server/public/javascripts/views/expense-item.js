@@ -10,9 +10,10 @@ define([
             var el=$('.container tbody');
 
             var json = {
-
-                from: this.model.get('startDate').split("T")[0],
-                to:this.model.get('endDate').split("T")[0],
+                url: this.model.url(),
+                id: this.model.id,
+                from: this.model.from(),
+                to:this.model.to(),
                 total: this.model.get('total')}
             el.append(_.template( template,json));
             return this;
