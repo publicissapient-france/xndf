@@ -1,0 +1,55 @@
+<form name="exp" id="content">
+    <table class="table table-striped container">
+        <thead>
+        <tr>
+            <td class="span1">
+                <h3><i class="icon-plus icon-white"></i> New</h3>
+            </td>
+
+            <td class="span1">
+                Du <input type="date" id="startDate" class="span2" value="<%= from %>">
+            </td>
+            <td class="span1">
+               au <input type="date" id="endDate" class="span2" value="<%= to %>">
+            </td>
+            <td style="text-align:right" class="span3">
+                <a id="add" class="btn"><i class="icon-plus-sign"></i> Add Line</a>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td id="template" colspan="4" class="input-append">
+                <select name="type" class="span2">
+                    <option>Phone</option>
+                    <option>Internet</option>
+                </select>
+                <input type="text" id="description" placeholder="Description" list="desc" class="span2" autofocus="">
+                <datalist id="desc">
+                    <option value="Internet"></option>
+                    <option value="Telephone"></option>
+                </datalist>
+                <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
+                <input type="date" id="valueDate" data-datepicker="datepicker"  class="span2">
+                <input type="number" id="amount" class="span1"><span class="add-on">€</span>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2">
+                <a class="btn btn-inverse" href=""><i class="icon-chevron-left icon-white"></i> Back</a>
+            </td>
+            <td style="text-align:right" class="input-append" colspan="2">
+                <input type="text" id="sum" class="span1" readonly="" value="<%=total%>"><span class="add-on">€</span><a id="put" class="btn"><i class="icon-ok"></i> Ok</a>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+    <p class="hidden" style="visibility: hidden">
+        id: <input type="number" id="id">
+        <input type="text" id="host">
+        <input type="text" id="base">
+    </p>
+    <input type="file" name="file" style="visibility:hidden;position:absolute">
+</form>
