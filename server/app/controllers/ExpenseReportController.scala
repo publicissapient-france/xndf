@@ -41,10 +41,10 @@ object ExpenseReportController extends Controller with Secured {
   def index = IsAuthenticated {
     userId => implicit request =>
       val allReports = for {
-        reports <- reportStore.values
-        report <- reports.values
-      } yield report
-      Ok(toJson(allReports.toSeq))
+        user <- User.findByVerifiedId(userId)
+        reports <- reportStore.get(user.id)
+      } yield reports.values
+      Ok(toJson(allReports.flatten.toSeq))
   }
 
   def show(id: Long) = IsAuthenticated {
