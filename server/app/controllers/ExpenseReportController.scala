@@ -12,14 +12,14 @@ object ExpenseReportController extends Controller with Secured {
       Map(
         Id(1l) ->
           ExpenseReport(Id(1l), new Date(), new Date(), Id(1000), Seq(
-            ExpenseLine(Id(1l), Id(1l), new Date(), 1, "Xebia", "Telephone", Phone(19.99)),
-            ExpenseLine(Id(1l), Id(1l), new Date(), 1, "Xebia", "Internet", Internet(29.99))
+            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Telephone", Phone(19.99)),
+            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Internet", Internet(29.99))
           ))
         ,
         Id(2l) ->
           ExpenseReport(Id(2l), new Date(), new Date(), Id(1000), Seq(
-            ExpenseLine(Id(1l), Id(1l), new Date(), 1, "Xebia", "Telephone", Lodging(95.00)),
-            ExpenseLine(Id(1l), Id(1l), new Date(), 1, "Xebia", "Internet", Transportation(120.00))
+            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Telephone", Lodging(95.00)),
+            ExpenseLine(Id(1l), Id(1l), new Date(), "Xebia", "Internet", Transportation(120.00))
           ))
       )
   )

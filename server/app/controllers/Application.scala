@@ -1,7 +1,6 @@
 package controllers
 
 import play.api._
-import play.api.libs.json.Json._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
@@ -14,7 +13,7 @@ import play.api.libs.concurrent.Redeemed
 
 object Application extends Controller with Secured {
 
-  def index = Action {
+  def index = IsAuthenticated { user=>implicit request =>
     Ok(html.index())
   }
 
@@ -28,12 +27,12 @@ object Application extends Controller with Secured {
     loginForm.bindFromRequest.fold(
       error => {
         Logger.info("bad request " + error.toString)
-        BadRequest(error.toString)
+        BadRequest(error.toString())
       },
       {
-        case (openid) => AsyncResult(
+        case (user) => AsyncResult(
             OpenID.redirectURL(
-                openid, 
+                user,
                 routes.Application.openIDCallback().absoluteURL(),
                 Seq(
                   "email" -> "http://schema.openid.net/contact/email",
@@ -61,7 +60,7 @@ object Application extends Controller with Secured {
 	      case Thrown(t) => {
 	        // Here you should look at the error, and give feedback to the user
           Logger.error("impossible d'authentifier avec openid",t)
-          Redirect(routes.Application.login)
+          Redirect(routes.Application.login())
 	      }
 	    })
   )
@@ -76,14 +75,14 @@ object Application extends Controller with Secured {
     user.map{ u =>
       val uri = request.session.get("before_auth_requested_url").getOrElse(routes.Application.index())
       Redirect(uri.toString,301).withSession("verifiedId"->u.verifiedId) }
-      .getOrElse(Redirect(routes.Application.login))
+      .getOrElse(Redirect(routes.Application.login()))
   }
 
   /**
    * Logout and clean the session.
    */
   def logout = Action {
-    Redirect(routes.Application.index).withNewSession.flashing(
+    Redirect(routes.Application.index()).withNewSession.flashing(
       "success" -> "You've been logged out")
   }
 
@@ -103,7 +102,7 @@ trait Secured {
    * Redirect to login if the user in not authorized.
    */
   private def onUnauthorized(request: RequestHeader) = {
-    Results.Redirect(routes.Application.login).withSession("before_auth_requested_url"-> request.uri);
+    Results.Redirect(routes.Application.login()).withSession("before_auth_requested_url"-> request.uri);
   }
 
   // ---

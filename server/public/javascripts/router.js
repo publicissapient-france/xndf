@@ -10,7 +10,7 @@ define([
             // Define some URL routes
             "":"home",
             // Default
-            "*actions": "defaultAction"
+            "home": "home"
         },
 
         home: function(){
