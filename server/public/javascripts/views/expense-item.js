@@ -9,13 +9,8 @@ define([
         render:function (eventName) {
             var el=$('.container tbody');
 
-            var json = {
-                url: this.model.url(),
-                id: this.model.id,
-                from: this.model.from(),
-                to:this.model.to(),
-                total: this.model.get('total')}
-            el.append(_.template( template,json));
+
+            el.append(_.template( template,this.model.asJson()));
             return this;
         }
     });

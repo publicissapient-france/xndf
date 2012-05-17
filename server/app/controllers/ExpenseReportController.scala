@@ -4,7 +4,9 @@ import play.api.mvc._
 import play.api.libs.json.Json._
 import java.util.Date
 import models._
-import anorm.{Pk, Id}
+import play.api.libs.json.JsValue
+import anorm.{NotAssigned, Pk, Id}
+import org.specs2.internal.scalaz.Digit._0
 
 object ExpenseReportController extends Controller with Secured {
   val reportStore: Map[Pk[Long], Map[Pk[Long], ExpenseReport]] = Map(
@@ -55,5 +57,15 @@ object ExpenseReportController extends Controller with Secured {
         report <- reports.get(Id(id))
       } yield report
       Ok(toJson(report))
+  }
+
+  def create= IsAuthenticated(parse.json){ userId=> implicit request =>
+      val jsReport=request.body
+      val expenseReport=jsReport.as[ExpenseReport]
+      val idUser: Pk[Long] = User.findByVerifiedId(userId).map(_.id).getOrElse(NotAssigned)
+      val saved: ExpenseReport = ExpenseReport(Id(new Date().getTime), expenseReport.from, expenseReport.to, idUser, expenseReport.lines)
+
+
+      Ok(toJson(saved))
   }
 }

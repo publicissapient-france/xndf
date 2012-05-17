@@ -8,6 +8,7 @@ define([
         routes: {
             // Define some URL routes
             "home": "home",
+            "expense/new":"new_expense",
             "expense/:id":"edit_expense",
             // Default
             "":"home",
@@ -25,6 +26,11 @@ define([
                 expense.fetch({success:function() {
                     new ExpenseDetailsView({model:expense}).render();
                 }})
+            });
+        },
+        new_expense: function(id){
+            require([ 'models/expense', 'views/expense-details'],function(Expense, ExpenseDetailsView){
+                new ExpenseDetailsView({model:new Expense()}).render();
             });
         },
         defaultAction: function(actions){
