@@ -1,6 +1,27 @@
-<div class="row">
-    <div class="span4">
-        <ul class="nav">
-        </ul>
-    </div>
-</div>
+<form name="f" id="content">
+<table class="table table-striped container">
+    <thead>
+    <tr>
+        <td><h3><i class="icon-list icon-white" style="margin-top:3px"></i> Expenses</h3></td>
+        <td style="text-align:right">
+            <a id="new" class="btn span2" href="new.html"><i class="icon-pencil"></i> New Expense</a>
+        </td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr><td colspan="2">Loading...</td></tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td>
+            <input type="text" name="id" placeholder="id" class="hide">
+            <input type="text" name="rev" placeholder="rev" class="hide">
+            <a id="delete" class="btn btn-danger"><i class="icon-fire icon-white"></i> Delete</a>
+        </td>
+        <td style="text-align:right">
+            <a id="get" class="btn btn-inverse span2"><i class="icon-repeat icon-white"></i> Reload</a>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+</form>

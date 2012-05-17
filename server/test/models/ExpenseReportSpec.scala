@@ -12,8 +12,8 @@ class ExpenseReportSpec extends Specification {
       val date = ISO_8601_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
       val expenseReport = ExpenseReport(Id(1), date, date, Id(1), Seq())
-        .addLine(NotAssigned, date, 1, "xebia", "description", Internet(15.99))
-        .addLine(NotAssigned, date, 2, "xebia", "description", Internet(15.99))
+        .addLine(NotAssigned, date, "xebia", "description", Internet(15.99))
+        .addLine(NotAssigned, date, "xebia", "description", Internet(15.99))
 
       val jsExpenseReport = toJson(expenseReport)
       val toExpenseReport = jsExpenseReport.as[ExpenseReport]

@@ -9,17 +9,19 @@ import libs.json._
 case class ExpenseReport(id: Pk[Long], from: Date, to: Date, userId: Pk[Long], _lines: Seq[ExpenseLine]) {
   lazy val lines = _lines
 
-  def addLine(id: Pk[Long], valueDate: Date, evidenceNumber: Int, account: String, description: String, expense: Expense) = {
+  def addLine(id: Pk[Long], valueDate: Date, account: String, description: String, expense: Expense) = {
     lazy val newParent: ExpenseReport = ExpenseReport(this.id, this.from, this.to, this.userId, line +: this.lines)
-    lazy val line: ExpenseLine = ExpenseLine(id, this.id, valueDate, evidenceNumber, account, description, expense)
+    lazy val line: ExpenseLine = ExpenseLine(id, this.id, valueDate, account, description, expense)
     newParent
+  }
+  def total={
+    lines.map(l => l.expense.amount).reduceLeft {_+_}
   }
 }
 
 case class ExpenseLine(id: Pk[Long],
                        expenseReportId: Pk[Long],
                        valueDate: Date,
-                       evidenceNumber: Int,
                        account: String,
                        description: String,
                        expense: Expense) {
@@ -32,7 +34,6 @@ object ExpenseLine {
         (value \ "id").as[Pk[Long]],
         (value \ "expenseReportId").as[Pk[Long]],
         (value \ "valueDate").as[Date],
-        (value \ "evidenceNumber").as[Int],
         (value \ "account").as[String],
         (value \ "description").as[String],
         ((value \ "expenseType").as[String],(value \ "expense").as[Double])
@@ -45,7 +46,6 @@ object ExpenseLine {
           "id" -> toJson(line.id),
           "expenseReportId" -> toJson(line.expenseReportId),
           "valueDate" -> toJson(line.valueDate),
-          "evidenceNumber" -> toJson(line.evidenceNumber),
           "account" -> toJson(line.account),
           "description" -> toJson(line.description),
           "expense" -> toJson(line.expense.amount),
@@ -79,6 +79,7 @@ object ExpenseReport {
           "userId" -> toJson(report.userId),
           "startDate" -> toJson(report.from),
           "endDate" -> toJson(report.to),
+          "total" -> toJson(report.total),
           "lines" -> toJson(report.lines)
         )
       )
@@ -127,7 +128,7 @@ case class Meal(amount: Double) extends Expense {
 }
 
 case class Phone(amount: Double) extends Expense {
-  val qualifier="Phnone"
+  val qualifier="Phone"
 }
 
 case class Internet(amount: Double) extends Expense {
