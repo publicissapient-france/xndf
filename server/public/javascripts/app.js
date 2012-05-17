@@ -14,10 +14,3 @@ define([
         initialize: initialize
     };
 });
-
-var d;
-var j;
-require(["jQuery"], function($){
-    d=$;
-    j=$;
-})      ;
