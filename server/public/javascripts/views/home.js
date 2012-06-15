@@ -1,5 +1,5 @@
 define([
-    'jQuery',
+    'jquery',
     'Underscore',
     'Backbone',
     'models/expenses',

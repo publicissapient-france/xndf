@@ -1,5 +1,5 @@
 define([
-    'jQuery',
+    'jquery',
     'Underscore',
     'Backbone',
     'models/expense',
@@ -17,7 +17,6 @@ define([
         },
 
         render:function (eventName) {
-            console.dir(this.model);
             this.setElement(_.template(template, this.model.asJson()));
             var model = this.model;
             var table = this.$(".container tbody");
