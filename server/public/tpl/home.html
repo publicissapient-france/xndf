@@ -9,7 +9,12 @@
     </tr>
     </thead>
     <tbody>
-    <tr><td colspan="2">Loading...</td></tr>
+    <% _.each(models, function(expense) { %>
+    <tr>
+        <td><a href="#expense/<%=expense.id%>"><input type="radio" name="expense-items" id="<%=expense.id%>"> <%= expense.from() %> <i class="icon-play"/> <%= expense.to()  %></a></td>
+        <td style="text-align:right;padding-right:15px"><%= expense.get('total')  %></td>
+    </tr>
+    <% });%>
     </tbody>
     <tfoot>
     <tr>

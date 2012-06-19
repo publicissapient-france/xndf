@@ -2,6 +2,7 @@
 define([
     'Backbone'
 ], function(Backbone){
+
     var AppRouter = Backbone.Router.extend({
         routes: {
             // Define some URL routes
@@ -14,9 +15,15 @@ define([
         },
 
         home: function(){
-            require([ 'views/home' ],function(homeView){
-                homeView.render();
-            });
+
+            if(this.homeview==undefined){
+                var self=this;
+                require(['views/home'], function(homeview){
+                    self.homeview=homeview;
+                });
+            }else{
+                this.homeview.refresh();
+            }
         },
         edit_expense: function(id){
             require([ 'models/expense', 'views/expense-details'],function(Expense, ExpenseDetailsView){
