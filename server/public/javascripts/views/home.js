@@ -20,7 +20,7 @@ define([
             },
 
             render: function () {
-                this.el = _.template(template,this.model);
+                this.el = _.template(template,{'models':this.model.toJSON()});
                 $('#content').html(this.el);
                 return this;
             },
