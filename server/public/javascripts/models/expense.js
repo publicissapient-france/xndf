@@ -1,8 +1,9 @@
 // Filename: models/project
 define([
     'Underscore',
-    'Backbone'
-], function (_, Backbone) {
+    'Backbone',
+    'Moment'
+], function (_, Backbone,moment) {
     var Expense = Backbone.Model.extend({
             urlRoot:"/expenses",
             defaults:{
@@ -31,7 +32,8 @@ define([
                     from:this.from(),
                     to:this.to(),
                     id:this.get('id'),
-                    total:this.get('total')
+                    total:this.get('total'),
+                    lines: this.get('lines')
                 }
                 return json;
             }

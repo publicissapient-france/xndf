@@ -3,9 +3,8 @@ define([
     'Underscore',
     'Backbone',
     'models/expense',
-    'text!../../tpl/expense-detail.html',
-    'text!../../tpl/expenseline-detail.html'
-], function ($, _, Backbone, expense, template, lineTemplate) {
+    'text!../../tpl/expense-detail.html'
+], function ($, _, Backbone, expense, template) {
     var ExpenseDetailsView = Backbone.View.extend({
         self:this,
         initialize:function () {
@@ -17,21 +16,13 @@ define([
         },
 
         render:function (eventName) {
-            this.setElement(_.template(template, this.model.asJson()));
-            var model = this.model;
-            var table = this.$(".container tbody");
-            var lines = model.get('lines');
-            if (lines.length != 0) {
-                table.empty();
-            }
-            _.each(model.get('lines'), function (line) {
-                line.valueDate = moment(line.valueDate).format(window.dateFormat);
-                var el = $(_.template(lineTemplate, line));
-                el.find('select option[value=' + line.expenseType + ']').attr('selected', true)
-                table.append(el);
-
+            var $element=$(_.template(template, this.model.toJSON()));
+            _.each(this.model.get('lines'), function(line,index){
+                var selectedOption = $element.find('#expenseType').eq(index).children('option[value='+line.expenseType+']');
+                selectedOption.attr('selected',true);
             });
-            $('#content').replaceWith(this.el);
+            this.setElement($element);
+            $('#content').replaceWith($element);
         },
 
         saveExpense:function () {
