@@ -3,9 +3,8 @@ define([
     'Underscore',
     'Backbone',
     'models/expenses',
-    'views/expense-item',
     'text!../../tpl/home.html' ],
-    function ($, _, Backbone, Expenses, ExpenseItemView, template) {
+    function ($, _, Backbone, Expenses, template) {
         var HomeView = Backbone.View.extend({
             el: '#content',
 
