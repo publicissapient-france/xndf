@@ -9,6 +9,7 @@ define([
         self:this,
         initialize:function () {
             this.model.on("reset", this.render, this);
+            this.model.on("sync", this.render, this);
         },
         events:{
             "click #put":"saveExpense",
@@ -25,6 +26,7 @@ define([
         },
 
         render:function () {
+            console.log("render expense");
             var $element = this.renderTemplate(this.model.toJSON());
             this.setElement($element);
             $('#content').replaceWith($element);
@@ -45,7 +47,6 @@ define([
                     "account":"Xebia"
                 };
             });
-            this.model.set();
             if (this.model.isNew()) {
                 this.model.unset('id')
             }
