@@ -9,12 +9,16 @@ object ApplicationBuild extends Build {
 
     val resolvers = Seq("scala-tools release" at "http://scala-tools.org/repo-releases/")
     val appDependencies = Seq(
-      "org.mongodb" %% "casbah" % "3.0.0-M2",
-      "de.flapdoodle.embedmongo" % "de.flapdoodle.embedmongo" % "1.11"
+      "de.flapdoodle.embedmongo" % "de.flapdoodle.embedmongo" % "1.11",
+      "se.radley" %% "play-plugins-salat" % "1.0.4"
     )
+
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
       // Add your own project settings here
+      //routesImport += "se.radley.plugin.salat.Binders._",
+      //scalacOptions ++= Seq("-Xlog-implicits"),
+      templatesImport += "org.bson.types.ObjectId"
     )
 
 }

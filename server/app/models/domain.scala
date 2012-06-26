@@ -1,17 +1,18 @@
 package models
 
 import java.util.Date
-import anorm._
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import libs.json._
+import org.bson.types.ObjectId
+import com.novus.salat.annotations.raw.Key
 
-case class ExpenseReport(id: Pk[Long], from: Date, to: Date, userId: Pk[Long], _lines: Seq[ExpenseLine]) {
+case class ExpenseReport(id: ObjectId, from: Date, to: Date, @Key("user_id")userId: ObjectId, _lines: Seq[ExpenseLine]) {
   lazy val lines = _lines
 
-  def addLine(id: Pk[Long], valueDate: Date, account: String, description: String, expense: Expense) = {
+  def addLine(valueDate: Date, account: String, description: String, expense: Expense) = {
     lazy val newParent: ExpenseReport = ExpenseReport(this.id, this.from, this.to, this.userId, line +: this.lines)
-    lazy val line: ExpenseLine = ExpenseLine(id, this.id, valueDate, account, description, expense)
+    lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense)
     newParent
   }
   def total={
@@ -19,9 +20,7 @@ case class ExpenseReport(id: Pk[Long], from: Date, to: Date, userId: Pk[Long], _
   }
 }
 
-case class ExpenseLine(id: Pk[Long],
-                       expenseReportId: Pk[Long],
-                       valueDate: Date,
+case class ExpenseLine(valueDate: Date,
                        account: String,
                        description: String,
                        expense: Expense) {
@@ -31,8 +30,6 @@ object ExpenseLine {
   implicit object ExpenseLineFormat extends Format[ExpenseLine]{
     def reads(value: JsValue): ExpenseLine = {
       ExpenseLine(
-        (value \ "id").as[Pk[Long]],
-        (value \ "expenseReportId").as[Pk[Long]],
         (value \ "valueDate").as[Date],
         (value \ "account").as[String],
         (value \ "description").as[String],
@@ -43,8 +40,6 @@ object ExpenseLine {
     def writes(line: ExpenseLine) = {
       toJson(
         Map(
-          "id" -> toJson(line.id),
-          "expenseReportId" -> toJson(line.expenseReportId),
           "valueDate" -> toJson(line.valueDate),
           "account" -> toJson(line.account),
           "description" -> toJson(line.description),
@@ -61,10 +56,10 @@ object ExpenseReport {
   implicit object ExpenseReportReads extends Reads[ExpenseReport] {
     def reads(json: JsValue) = {
         ExpenseReport(
-          (json \ "id").as[Pk[Long]],
+          new ObjectId((json \ "id").as[String]),
           (json \ "startDate").as[Date],
           (json \ "endDate").as[Date],
-          (json \ "userId").as[Pk[Long]],
+          new ObjectId((json \ "userId").as[String]),
           (json \ "lines").as[Seq[ExpenseLine]]
         )
 
@@ -75,8 +70,8 @@ object ExpenseReport {
     def writes(report: ExpenseReport) = {
       toJson(
         Map(
-          "id" -> toJson(report.id),
-          "userId" -> toJson(report.userId),
+          "id" -> toJson(report.id.toString),
+          "userId" -> toJson(report.userId.toString),
           "startDate" -> toJson(report.from),
           "endDate" -> toJson(report.to),
           "total" -> toJson(report.total),
