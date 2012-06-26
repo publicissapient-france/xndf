@@ -11,7 +11,7 @@ class ExpenseReportSpec extends Specification {
     "convert to and from Json" in {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
-      val expenseReport = ExpenseReport(new ObjectId("1"), date, date, new ObjectId("1"), Seq())
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId(), Seq())
         .addLine(date, "xebia", "description", Internet(15.99))
         .addLine(date, "xebia", "description", Internet(15.99))
 
@@ -22,7 +22,7 @@ class ExpenseReportSpec extends Specification {
     "convert to and from Json with NotAssigned" in {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
-      val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId("1"), Seq())
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId(), Seq())
         .addLine(date, "xebia", "description", Internet(15.99))
         .addLine(date, "xebia", "description", Internet(15.99))
 
