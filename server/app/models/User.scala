@@ -1,48 +1,44 @@
 package models
 
-import com.novus.salat.dao._
 import com.mongodb.casbah.Imports._
-import se.radley.plugin.salat._
-import play.api.Play.current
 import play.api.libs.json._
 import org.bson.types.ObjectId
+import libs.mongo.DB
 
 case class User(id: ObjectId = new ObjectId, name: String, email: String, verifiedId: String) {
   def save() = {
-    User.withDao(implicit dao =>
-      dao.save(this)
-    )
+    User.withDao {
+      implicit dao =>
+        dao.save(this)
+    }
   }
 }
 
-object User {
-
-  def withDao[A, T](block: SalatDAO[User, ObjectId] => A): A = {
-    val dao = new SalatDAO[User, ObjectId](collection = mongoCollection("user")) {}
-    block(dao)
-  }
+object User extends DB[User, ObjectId] {
 
   def list(): List[User] = {
-    withDao(implicit dao =>
-      dao.find(MongoDBObject.empty).toList
-    )
+    withDao {
+      implicit dao =>
+        dao.find(MongoDBObject.empty).toList
+    }
   }
 
   def findByVerifiedId(verifiedId: String): Option[User] = {
-    withDao(implicit dao =>
-      dao.findOne(MongoDBObject("verifiedId" -> verifiedId))
-    )
+    withDao {
+      implicit dao =>
+        dao.findOne(MongoDBObject("verifiedId" -> verifiedId))
+    }
   }
 
   /**
    * Authenticate a User.
    */
   def authenticate(name: String, email: String, verifiedId: String): User = {
-    withDao(implicit dao =>
-      dao.findOne(MongoDBObject("verifiedId" -> verifiedId, "email" -> email)).getOrElse(
-        User.create(name, email, verifiedId)
-      )
-    )
+    withDao {
+      implicit dao =>
+        dao.findOne(MongoDBObject("verifiedId" -> verifiedId, "email" -> email)).getOrElse(
+          User.create(name, email, verifiedId))
+    }
   }
 
   /**
@@ -50,16 +46,18 @@ object User {
    */
   def create(name: String, email: String, verifiedId: String): User = {
     val user: User = User(new ObjectId, name, email, verifiedId)
-    withDao(implicit dao =>
-      dao.save(user)
-    )
+    withDao {
+      implicit dao =>
+        dao.save(user)
+    }
     user
   }
 
   def count() = {
-    withDao(implicit dao =>
-      dao.find(MongoDBObject.empty).toList.size
-    )
+    withDao {
+      implicit dao =>
+        dao.find(MongoDBObject.empty).toList.size
+    }
   }
 
   implicit object UserFormat extends Format[User] {
