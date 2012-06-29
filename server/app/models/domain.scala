@@ -1,13 +1,16 @@
 package models
 
 import java.util.Date
+import com.mongodb.casbah.Imports._
+import org.bson.types.ObjectId
+import libs.mongo.DB
+
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import libs.json._
-import org.bson.types.ObjectId
-import com.novus.salat.annotations.raw.Key
+import com.novus.salat.annotations.raw.Salat
 
-case class ExpenseReport(id: ObjectId, from: Date, to: Date, @Key("user_id")userId: ObjectId, _lines: Seq[ExpenseLine]) {
+case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine]) {
   lazy val lines = _lines
 
   def addLine(valueDate: Date, account: String, description: String, expense: Expense) = {
@@ -15,8 +18,16 @@ case class ExpenseReport(id: ObjectId, from: Date, to: Date, @Key("user_id")user
     lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense)
     newParent
   }
-  def total={
+
+  def total = {
     lines.map(l => l.expense.amount).sum
+  }
+
+  def save() {
+    ExpenseReport.withMongo {
+      implicit dao =>
+        dao.save(this)
+    }
   }
 }
 
@@ -27,39 +38,73 @@ case class ExpenseLine(valueDate: Date,
 }
 
 object ExpenseLine {
-  implicit object ExpenseLineFormat extends Format[ExpenseLine]{
+
+  implicit object ExpenseLineFormat extends Format[ExpenseLine] {
     def reads(value: JsValue): ExpenseLine = {
       ExpenseLine(
         (value \ "valueDate").as[Date],
         (value \ "account").as[String],
         (value \ "description").as[String],
-        ((value \ "expenseType").as[String],(value \ "expense").as[Double])
+        ((value \ "expenseType").as[String], (value \ "expense").as[Double])
       )
     }
 
     def writes(line: ExpenseLine) = {
-      toJson(
-        Map(
+      JsObject(
+        Seq(
           "valueDate" -> toJson(line.valueDate),
-          "account" -> toJson(line.account),
-          "description" -> toJson(line.description),
-          "expense" -> toJson(line.expense.amount),
-          "expenseType" -> toJson(line.expense.qualifier)
+          "account" -> JsString(line.account),
+          "description" -> JsString(line.description),
+          "expense" -> JsNumber(line.expense.amount),
+          "expenseType" -> JsString(line.expense.qualifier)
         )
       )
     }
   }
+
 }
 
-object ExpenseReport {
+object ExpenseReport extends DB[ExpenseReport, ObjectId] {
 
-  implicit object ExpenseReportReads extends Reads[ExpenseReport] {
+  def withMongo[A] = withDao[A]("expenses") _
+
+  def findAllByUserId(userId: ObjectId): List[ExpenseReport] = {
+    withMongo {
+      implicit dao =>
+        dao.find(MongoDBObject("userId"->userId)).toList
+    }
+  }
+
+  def findByIdAndUserID(id: ObjectId, userId: ObjectId): Option[ExpenseReport] = {
+    withMongo {
+      implicit dao =>
+        dao.findOne(MongoDBObject("userId" -> userId,"_id" -> id))
+    }
+  }
+
+  def findById(id: ObjectId): Option[ExpenseReport] = {
+    withMongo {
+      implicit dao =>
+        dao.findOneById(id)
+    }
+  }
+
+  def count() = {
+    withMongo {
+      implicit dao =>
+        dao.count(MongoDBObject.empty)
+    }
+  }
+
+  implicit object ExpenseReportReads extends Reads[User => ExpenseReport] {
     def reads(json: JsValue) = {
+      user =>
+        val expenseReportId: ObjectId = (json \ "id").asOpt[String].map(new ObjectId(_)).getOrElse(new ObjectId())
         ExpenseReport(
-          new ObjectId((json \ "id").as[String]),
+          expenseReportId,
           (json \ "startDate").as[Date],
           (json \ "endDate").as[Date],
-          new ObjectId((json \ "userId").as[String]),
+          user.id,
           (json \ "lines").as[Seq[ExpenseLine]]
         )
 
@@ -86,7 +131,7 @@ object ExpenseReport {
 
 object Expense {
 
-  implicit def tupleToExpense(tuple: (String, Double)):Expense = {
+  implicit def tupleToExpense(tuple: (String, Double)): Expense = {
     val (qualifier, amount) = tuple
     qualifier match {
       case "Lodging" => Lodging(amount)
@@ -101,36 +146,37 @@ object Expense {
   }
 }
 
-
+@Salat
 sealed trait Expense {
   val amount: Double
   val qualifier: String
 }
 
-case class Lodging(amount: Double) extends Expense    {
-  val qualifier="Lodging"
+case class Lodging(amount: Double) extends Expense {
+  val qualifier = "Lodging"
 }
+
 case class Transportation(amount: Double) extends Expense {
-  val qualifier="Transportation"
+  val qualifier = "Transportation"
 }
 
 case class Gas(amount: Double) extends Expense {
-  val qualifier="Gas"
+  val qualifier = "Gas"
 }
 
 case class Meal(amount: Double) extends Expense {
-  val qualifier="Meal"
+  val qualifier = "Meal"
 }
 
 case class Phone(amount: Double) extends Expense {
-  val qualifier="Phone"
+  val qualifier = "Phone"
 }
 
 case class Internet(amount: Double) extends Expense {
-  val qualifier="Internet"
+  val qualifier = "Internet"
 }
 
-case class Other(amount: Double) extends Expense{
-  val qualifier="Other"
+case class Other(amount: Double) extends Expense {
+  val qualifier = "Other"
 }
 

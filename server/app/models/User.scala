@@ -4,10 +4,11 @@ import com.mongodb.casbah.Imports._
 import play.api.libs.json._
 import org.bson.types.ObjectId
 import libs.mongo.DB
+import mongoContext._
 
 case class User(id: ObjectId = new ObjectId, name: String, email: String, verifiedId: String) {
-  def save() = {
-    User.withDao {
+  def save() {
+    User.withMongo {
       implicit dao =>
         dao.save(this)
     }
@@ -15,26 +16,27 @@ case class User(id: ObjectId = new ObjectId, name: String, email: String, verifi
 }
 
 object User extends DB[User, ObjectId] {
+  def withMongo[A] = withDao[A]("users") _
 
   def list(): List[User] = {
-    withDao {
+    withMongo {
       implicit dao =>
         dao.find(MongoDBObject.empty).toList
     }
   }
 
   def findByVerifiedId(verifiedId: String): Option[User] = {
-    withDao {
+    withMongo {
       implicit dao =>
         dao.findOne(MongoDBObject("verifiedId" -> verifiedId))
     }
-  }
+}
 
   /**
    * Authenticate a User.
    */
   def authenticate(name: String, email: String, verifiedId: String): User = {
-    withDao {
+    withMongo {
       implicit dao =>
         dao.findOne(MongoDBObject("verifiedId" -> verifiedId, "email" -> email)).getOrElse(
           User.create(name, email, verifiedId))
@@ -46,7 +48,7 @@ object User extends DB[User, ObjectId] {
    */
   def create(name: String, email: String, verifiedId: String): User = {
     val user: User = User(new ObjectId, name, email, verifiedId)
-    withDao {
+    withMongo {
       implicit dao =>
         dao.save(user)
     }
@@ -54,7 +56,7 @@ object User extends DB[User, ObjectId] {
   }
 
   def count() = {
-    withDao {
+    withMongo {
       implicit dao =>
         dao.find(MongoDBObject.empty).toList.size
     }
