@@ -17,16 +17,14 @@ define([
         },
 
         renderTemplate:function (json) {
-            var $element = $(_.template(template, json));
+            var $expenseElement = $(_.template(template, json));
             _.each(json.lines, function (line, index) {
-                var selectedOption = $element.find('#expenseType').eq(index).children('option[value=' + line.expenseType + ']');
-                selectedOption.attr('selected', true);
+                $expenseElement.find('#expenseType')[index].value=line.expenseType;
             });
-            return $element;
+            return $expenseElement;
         },
 
         render:function () {
-            console.log("render expense");
             var $element = this.renderTemplate(this.model.toJSON());
             this.setElement($element);
             $('#content').replaceWith($element);
@@ -42,8 +40,6 @@ define([
                     "description":t.find('#description').val(),
                     "valueDate":t.find('#valueDate').val(),
                     "expenseType":t.find('#expenseType').val(),
-                    "id":null,
-                    "expenseReportId":null,
                     "account":"Xebia"
                 };
             });
