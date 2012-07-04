@@ -4,11 +4,10 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /user/:id                   controllers.UserController.show(id:Long)
 GET     /users                      controllers.UserController.index
 
 GET     /expenses                   controllers.ExpenseReportController.index
-GET     /expenses/:id                controllers.ExpenseReportController.show(id:Long)
+GET     /expenses/:id               controllers.ExpenseReportController.show(id:String)
 POST    /expenses                   controllers.ExpenseReportController.create
 # Authentication
 GET     /login                      controllers.Application.login
