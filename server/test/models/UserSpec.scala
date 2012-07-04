@@ -1,69 +1,90 @@
 package models
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.{Around, Specification}
 import play.api.test._
 import play.api.test.Helpers._
-import anorm._
 import play.api.libs.json.Json._
+import org.bson.types.ObjectId
+import play.api.libs.json.JsValue
+import de.flapdoodle.embedmongo.{MongodProcess, MongoDBRuntime, MongodExecutable}
+import de.flapdoodle.embedmongo.config.MongodConfig
+import de.flapdoodle.embedmongo.distribution.Version
+import models.User.UserFormat.reads
+import org.specs2.execute.Result
 
 class UserSpec extends Specification {
 
-  import models.User
-  import models.User._
+  val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance().prepare(new MongodConfig(Version.V2_0, 27017, false))
+  val mongod: MongodProcess = mongodExe.start();
 
+  def inMemoryMongoDatabase(name: String = "default"): Map[String, String] = {
+    val dbname: String = "play-test-" + scala.util.Random.nextInt
+    println(dbname)
+    Map(
+      ("mongodb." + name + ".db" -> dbname)
+    )
+  }
 
-  "User model" should {
-    "save a user" in {
-      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        user1.save() === 1000 and
-        User.count() === 1
-      }
-    }
-
-    "be retrieved by id" in {
-      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        user1.save()
-        user2.save()
-        val Some(user)=User.findById(1000)
-        user.name must equalTo(user1.name)
-      }
-    }
-
-    "be retrieved by verifiedId" in {
-      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        user1.save()
-        user2.save()
-        val Some(user)=User.findByVerifiedId("id2")
-        user.name must equalTo(user2.name)
-      }
-    }
-
-    "be converted from and to json" in {
-      fromJson(toJson(user2)) === user2
-    }
-
-    "be created and saved in the database" in {
-      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        val u = User.create("Josiane", "email3", "id3")
-        User.count() === 1 and u.name === User.findByVerifiedId("id3").get.name
-      }
-    }
-
-    "be authenticated when user exists" in {
-      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        val u = User.create("Josiane", "email3", "id3")
-        val authenticated=User.authenticate("Josiane", "email3", "id3")
-        User.count() === 1 and u === authenticated
-      }
-    }
-    "be authenticated when user does not exist" in {
-      running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
-        val authenticated=User.authenticate("Josiane", "email3", "id3")
-        User.count() === 1 and authenticated.id === Id(1000)
+  object emptyApp extends Around {
+    def around[T <% Result](t: => T) = {
+      running(FakeApplication(additionalConfiguration = inMemoryMongoDatabase())) {
+        t // execute t inside a http session
       }
     }
   }
 
-  private val user1 = User(NotAssigned, "John Doe", "email1", "id1")
-  private val user2 = User(Id(1), "Jane Doe", "email2", "id2")
+  object populatedApp extends Around {
+    def around[T <% Result](t: => T) = {
+      running(FakeApplication(additionalConfiguration = inMemoryMongoDatabase())) {
+        User(new ObjectId, "Jane Doe", "email1", "id1").save()
+        User(new ObjectId, "John Smith", "email2", "id2").save()
+        t // execute t inside a http session
+      }
+    }
+  }
+
+  "User instance" can {
+    "be saved to mongo" in emptyApp {
+      User.count() === 0
+      val user: User = User(new ObjectId, "Jane Doe", "email2", "id2")
+      user.save()
+      User.count() === 1
+    }
+  }
+
+  "A user " can {
+    "be retrieved by verifiedId" in populatedApp {
+      val Some(user) = User.findByVerifiedId("id2")
+      user.name === "John Smith"
+    }
+
+    "be converted from and to json" in {
+      val user: User = User(new ObjectId, "Jane Doe", "email2", "id2")
+
+      val json: JsValue = toJson(user)
+      val json1: User = reads(json)
+      json1 === user
+    }
+
+    "be created and saved in the database" in populatedApp {
+      val u = User.create("Josiane", "email3", "id3")
+      User.count() === 3 and u.name === User.findByVerifiedId("id3").get.name
+    }
+
+    "be authenticated when user exists" in populatedApp {
+      val u = User.create("Josiane", "email3", "id3")
+      val authenticated = User.authenticate("Josiane", "email3", "id3")
+      User.count() === 3 and u === authenticated
+    }
+    "be authenticated when user does not exist" in populatedApp {
+      val authenticated = User.authenticate("Josiane", "email3", "id3")
+      User.count() === 3
+    }
+  }
+  step(after())
+
+  def after() = {
+    mongod.stop()
+    mongodExe.cleanup()
+  }
 }
