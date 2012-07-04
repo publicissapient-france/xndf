@@ -7,10 +7,10 @@
             </td>
 
             <td class="span1">
-                Du <input type="date" id="startDate" class="span2" value="<%= from %>">
+                Du <input type="date" id="startDate" class="span2" value="<%= startDate %>">
             </td>
             <td class="span1">
-               au <input type="date" id="endDate" class="span2" value="<%= to %>">
+               au <input type="date" id="endDate" class="span2" value="<%= endDate %>">
             </td>
             <td style="text-align:right" class="span3">
                 <a id="add" class="btn"><i class="icon-plus-sign"></i> Add Line</a>
@@ -18,27 +18,33 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td id="template" colspan="4" class="input-append">
-                <select name="type" class="span2">
-                    <option>Phone</option>
-                    <option>Internet</option>
+        <% _.each(lines,function(line){ %>
+        <tr id="<%= id %>">
+            <td id="expense-line" colspan="4" class="input-append">
+                <select  id="expenseType" name="type" class="span2">
+                    <option value="Lodging" >Lodging</option>
+                    <option value="Phone">Phone</option>
+                    <option value="Internet">Internet</option>
+                    <option value="Transportation">Transportation</option>
                 </select>
-                <input type="text" id="description" placeholder="Description" list="desc" class="span2" autofocus="">
                 <datalist id="desc">
                     <option value="Internet"></option>
-                    <option value="Telephone"></option>
+                    <option value="Phone"></option>
+                    <option value="Lodging"></option>
+                    <option value="Transportation"></option>
                 </datalist>
+                <input type="text" id="description" placeholder="Description" list="desc" class="span3" autofocus="" value="<%= line.description %>">
                 <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
-                <input type="date" id="valueDate" data-datepicker="datepicker"  class="span2">
-                <input type="number" id="amount" class="span1"><span class="add-on">€</span>
+                <input type="date" id="valueDate" data-datepicker="datepicker"  class="span2" value="<%= line.valueDate %>">
+                <input type="number" id="amount" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
             </td>
         </tr>
+        <% }); %>
         </tbody>
         <tfoot>
         <tr>
             <td colspan="2">
-                <a class="btn btn-inverse" href=""><i class="icon-chevron-left icon-white"></i> Back</a>
+                <a class="btn btn-inverse" href="#home"><i class="icon-chevron-left icon-white"></i> Back</a>
             </td>
             <td style="text-align:right" class="input-append" colspan="2">
                 <input type="text" id="sum" class="span1" readonly="" value="<%=total%>"><span class="add-on">€</span><a id="put" class="btn"><i class="icon-ok"></i> Ok</a>

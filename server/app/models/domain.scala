@@ -15,7 +15,7 @@ case class ExpenseReport(id: Pk[Long], from: Date, to: Date, userId: Pk[Long], _
     newParent
   }
   def total={
-    lines.map(l => l.expense.amount).reduceLeft {_+_}
+    lines.map(l => l.expense.amount).sum
   }
 }
 

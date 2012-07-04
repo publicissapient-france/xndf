@@ -1,35 +1,38 @@
 // Filename: router.js
 define([
-    'jQuery',
-    'Underscore',
-    'Backbone'
-], function($, _, Backbone ){
+    'Backbone',
+    'models/expense',
+    'views/home'
+], function(Backbone, Expense, homeview){
+
     var AppRouter = Backbone.Router.extend({
         routes: {
             // Define some URL routes
             "home": "home",
+            "expense/new":"new_expense",
             "expense/:id":"edit_expense",
             // Default
             "":"home",
-            "*other"    : "defaultAction"
+            "*other"    : "home"
         },
 
         home: function(){
-            require([ 'views/home' ],function(homeView){
-                homeView.render();
-            });
+            homeview.refresh();
         },
+
         edit_expense: function(id){
-            require([ 'models/expense', 'views/expense-details'],function(Expense, ExpenseDetailsView){
-                var expense = new Expense({id:id});
+            require(['views/expense-details'],function(ExpenseDetailsView){
+                var expense = homeview.model.get(id);
                 expense.fetch({success:function() {
                     new ExpenseDetailsView({model:expense}).render();
                 }})
             });
         },
-        defaultAction: function(actions){
-            // We have no matching route, lets just log what the URL was
-            console.log('No route:', actions);
+
+        new_expense: function(id){
+            require(['views/expense-details'],function(ExpenseDetailsView){
+                new ExpenseDetailsView({model:new Expense()}).render();
+            });
         }
     });
 

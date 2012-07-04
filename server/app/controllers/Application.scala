@@ -9,6 +9,7 @@ import views._
 import play.api.libs.openid._
 import play.api.libs.concurrent.Thrown
 import play.api.libs.concurrent.Redeemed
+import play.api.libs.json.JsValue
 
 
 object Application extends Controller with Secured {
@@ -112,6 +113,13 @@ trait Secured {
    */
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { userId =>
     Action(request => f(userId)(request))
+  }
+
+  /**
+   * Action for authenticated users.
+   */
+  def IsAuthenticated[A](parser: BodyParser[A])(f: => String => Request[A] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+    Action(parser)(request => f(user)(request))
   }
 
   /**

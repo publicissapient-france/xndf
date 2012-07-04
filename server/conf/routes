@@ -8,7 +8,8 @@ GET     /user/:id                   controllers.UserController.show(id:Long)
 GET     /users                      controllers.UserController.index
 
 GET     /expenses                   controllers.ExpenseReportController.index
-GET     /expense/:id                controllers.ExpenseReportController.show(id:Long)
+GET     /expenses/:id                controllers.ExpenseReportController.show(id:Long)
+POST    /expenses                   controllers.ExpenseReportController.create
 # Authentication
 GET     /login                      controllers.Application.login
 POST    /authenticate               controllers.Application.authenticate
