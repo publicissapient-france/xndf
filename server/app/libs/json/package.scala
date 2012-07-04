@@ -8,7 +8,7 @@ import anorm.{NotAssigned, Id, Pk}
 
 package object json {
   val ISO_8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-  val DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy")
+  val DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd")
 
   implicit object DateWrites extends Writes[Date] {
     def writes(d: Date) = JsString(DATE_FORMATTER.format(d))

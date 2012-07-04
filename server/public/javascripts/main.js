@@ -1,5 +1,4 @@
 // Filename: main.js
-window.dateFormat="DD-MM-YYYY";
 // Require.js allows us to configure shortcut alias
 // There usage will become more apparent futher along in the tutorial.
 require.config({
@@ -12,9 +11,6 @@ require.config({
     },
 
     shim: {
-        'Moment': {
-            exports:'moment'
-        },
         'Underscore':{
             deps: ['jquery'],
             exports:'_'
@@ -35,10 +31,8 @@ require([
     // Some plugins have to be loaded in order due to there non AMD compliance
     // Because these scripts are not "modules" they do not pass any values to the definition function below
     'jquery',
-    'app',
-    'Moment'
-], function($,App, moment){
-    moment.defaultFormat="YYYY-MM-DDTHH:mm:ssZZ"
+    'app'
+], function($,App){
     // The "app" dependency is passed in as "App"
     // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
     App.initialize();
