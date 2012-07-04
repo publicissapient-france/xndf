@@ -12,7 +12,7 @@ class CustomConvertersSpec extends Specification {
     "convert a date to and from json " in {
       //iso8601 only has second precision
       //new Date has millisecond precision which makes the test fail
-      val date = ISO_8601_FORMATTER.parse("2012-04-17T00:04:00+0200")
+      val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
       val readDate = toJson(date).as[Date]
       readDate === date
     }

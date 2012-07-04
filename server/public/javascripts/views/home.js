@@ -1,31 +1,34 @@
 define([
-    'jQuery',
+    'jquery',
     'Underscore',
     'Backbone',
     'models/expenses',
-    'views/expense-item',
     'text!../../tpl/home.html' ],
-    function ($, _, Backbone, Expenses, ExpenseItemView, template) {
+    function ($, _, Backbone, Expenses, template) {
         var HomeView = Backbone.View.extend({
+            el: '#content',
+
             events:{
-                "click #get":"render"
+                "click #get":"refresh"
             },
 
-            render:function () {
-                this.setElement(_.template(template, this.model));
-                var table = this.$(".container tbody");
-                var data = this.model;
-                data.fetch({success:function () {
-                    table.empty();
-                    _.each(data.models, function (expense) {
-                        table.append(new ExpenseItemView({model:expense}).render().el);
-                    });
-                }});
-                $('#content').replaceWith(this.el);
+            initialize: function(){
+                this.model.on('reset',this.render,this);
+                this.model.on('add', this.render,this);
+                this.model.on('remove',this.render, this);
+                this.refresh();
+            },
+
+            render: function () {
+                this.el = _.template(template,{'models':this.model.toJSON()});
+                $('#content').html(this.el);
+                return this;
+            },
+
+            refresh: function(){
+                this.model.fetch();
             }
         });
 
-        var collection = new Expenses();
-        var homeView = new HomeView({model:collection});
-        return homeView;
+        return new HomeView({model:new Expenses()});
     });
