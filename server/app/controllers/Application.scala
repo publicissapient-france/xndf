@@ -4,6 +4,7 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
+import models.User.XEBIA_MAIL_PATTERN
 import models._
 import views._
 import play.api.libs.openid._
@@ -25,15 +26,9 @@ object Application extends Controller with Secured {
   }
 
   def authenticate = Action { implicit request =>
-    loginForm.bindFromRequest.fold(
-      error => {
-        Logger.info("bad request " + error.toString)
-        BadRequest(error.toString())
-      },
-      {
-        case (user) => AsyncResult(
+      AsyncResult(
             OpenID.redirectURL(
-                user,
+                "https://www.google.com/accounts/o8/id",
                 routes.Application.openIDCallback().absoluteURL(),
                 Seq(
                   "email" -> "http://schema.openid.net/contact/email",
@@ -51,7 +46,6 @@ object Application extends Controller with Secured {
               Redirect(routes.Application.login())
             }
           }))
-      })
   }
 
   def openIDCallback = Action { implicit request =>    
@@ -68,8 +62,8 @@ object Application extends Controller with Secured {
   }
   
   private def doAuthenticate(info:UserInfo, request:Request[AnyContent]) = {
-    val user = for{ 
-      email <- info.attributes.get("email")
+    val user: Option[User] = for{
+      email <- info.attributes.get("email").flatMap(XEBIA_MAIL_PATTERN.findFirstIn(_))
       lastname <- info.attributes.get("lastname")
       firstname <- info.attributes.get("firstname")
     } yield User.authenticate(firstname +" "+ lastname,email, info.id)
@@ -121,18 +115,4 @@ trait Secured {
   def IsAuthenticated[A](parser: BodyParser[A])(f: => String => Request[A] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
     Action(parser)(request => f(user)(request))
   }
-
-  /**
-   * Check if the connected user is a owner of this task.
-   *
-  
-  def IsOwnerOf(task: Long)(f: => String => Request[AnyContent] => Result) = IsAuthenticated { user =>
-    request =>
-      if (Task.isOwner(task, user)) {
-        f(user)(request)
-      } else {
-        Results.Forbidden
-      }
-  }*/
-
 }

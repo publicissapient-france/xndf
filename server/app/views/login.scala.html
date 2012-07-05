@@ -4,15 +4,6 @@
     <head>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#googleLogin').click(function() {
-                    $('#loginbutton').hide();
-                    $('#email').val('https://www.google.com/accounts/o8/id');
-                    $('#user').val('https://www.google.com/accounts/o8/id');
-                });
-            });
-        </script>
     </head>
     <body>
         
@@ -25,23 +16,9 @@
                     @error.message
                 </p>
             }
-            
-            @flash.get("success").map { message =>
-                <p class="success">
-                    @message
-                </p>
-            }
-            
-            <p>
-                <label for="email">OpenID URL</label>
-                &nbsp;&nbsp;
-                <input type="input" name="user" id="email" value="@form("user").value">
-                &nbsp;&nbsp;
-                <button type="submit" id="loginbutton">Login</button>
-            </p>
 
             <p>
-                or <button id="googleLogin">login with Google</button>
+                <button type="submit" id="loginbutton">Login</button>
             </p>
         }
     </body>
