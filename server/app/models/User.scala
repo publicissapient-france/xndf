@@ -4,7 +4,6 @@ import com.mongodb.casbah.Imports._
 import play.api.libs.json._
 import org.bson.types.ObjectId
 import libs.mongo.DB
-import mongoContext._
 
 case class User(id: ObjectId = new ObjectId, name: String, email: String, verifiedId: String) {
   def save() {
@@ -16,6 +15,8 @@ case class User(id: ObjectId = new ObjectId, name: String, email: String, verifi
 }
 
 object User extends DB[User, ObjectId] {
+  val XEBIA_MAIL_PATTERN = "(.*@xebia.fr)".r
+
   def withMongo[A] = withDao[A]("users") _
 
   def list(): List[User] = {
@@ -30,7 +31,7 @@ object User extends DB[User, ObjectId] {
       implicit dao =>
         dao.findOne(MongoDBObject("verifiedId" -> verifiedId))
     }
-}
+  }
 
   /**
    * Authenticate a User.
