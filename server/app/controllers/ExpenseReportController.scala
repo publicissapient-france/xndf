@@ -3,6 +3,7 @@ package controllers
 import play.api.mvc._
 import play.api.libs.json.Json._
 import models._
+import models.ExpenseFormat._
 import org.bson.types.ObjectId
 
 object ExpenseReportController extends Controller with Secured {
