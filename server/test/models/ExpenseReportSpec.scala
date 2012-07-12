@@ -10,6 +10,7 @@ import play.api.test.Helpers._
 import play.api.test.FakeApplication
 import libs.json.DATE_FORMATTER
 import play.api.libs.json.Json._
+import models.ExpenseFormat._
 
 class ExpenseReportSpec extends Specification {
   val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance.prepare(new MongodConfig(Version.V2_0, 27017, false))
