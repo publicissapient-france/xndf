@@ -35,7 +35,20 @@ object ExpenseReportController extends Controller with Secured {
         user =>
           val toExpenseReport = jsReport.as[User => ExpenseReport]
           val expenseReport = toExpenseReport(user)
-          expenseReport.save
+          expenseReport.save()
+          Ok(toJson(expenseReport))
+      }.getOrElse(
+        Redirect(routes.Application.login())
+      )
+  }
+  def update(id: String) = IsAuthenticated(parse.json) {
+    userId => implicit request =>
+      val jsReport = request.body
+      User.findByVerifiedId(userId).map {
+        user =>
+          val toExpenseReport = jsReport.as[User => ExpenseReport]
+          val expenseReport = toExpenseReport(user)
+          expenseReport.save()
           Ok(toJson(expenseReport))
       }.getOrElse(
         Redirect(routes.Application.login())
