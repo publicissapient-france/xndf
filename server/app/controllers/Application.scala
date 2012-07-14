@@ -97,7 +97,8 @@ trait Secured {
    * Redirect to login if the user in not authorized.
    */
   private def onUnauthorized(request: RequestHeader) = {
-    Results.Redirect(routes.Application.login()).withSession("before_auth_requested_url"-> request.uri);
+    Logger.info("Unauthorized access to "+request.uri+" , redirecting to "+routes.Application.login())
+    Results.Redirect(routes.Application.login()).withSession("before_auth_requested_url"-> request.uri)
   }
 
   // ---
@@ -106,7 +107,9 @@ trait Secured {
    * Action for authenticated users.
    */
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { userId =>
-    Action(request => f(userId)(request))
+    Action({request =>
+      Logger.info("Authorized access to "+request.uri+" , for user "+userId)
+      f(userId)(request)})
   }
 
   /**
