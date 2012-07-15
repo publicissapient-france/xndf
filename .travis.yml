@@ -3,4 +3,4 @@ scala:
   - 2.9.1
 
 notifications:
-  email: false
+  email: true
