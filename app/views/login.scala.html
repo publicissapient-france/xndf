@@ -2,7 +2,7 @@
 
 <html>
     <head>
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.ico")">
         <link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
     </head>
     <body>
@@ -16,8 +16,15 @@
                     @error.message
                 </p>
             }
+            @flash.get("error").map{ error =>
+                <p class="error">
+                    @error
+                </p>
+            }.getOrElse("")
 
-            <p>
+
+
+        <p>
                 <button type="submit" id="loginbutton">Login</button>
             </p>
         }
