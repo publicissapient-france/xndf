@@ -1,21 +1,20 @@
 define([
-    'jquery',
+    'zepto',
     'Underscore',
     'Backbone',
     'models/expense',
     'text!../../tpl/expense-detail.html'
 ], function ($, _, Backbone, expense, template) {
     var ExpenseDetailsView = Backbone.View.extend({
-        self:this,
-        initialize:function () {
-            this.model.on("reset", this.render, this);
-            this.model.on("sync", this.render, this);
-        },
         events:{
             "click #put":"saveExpense",
             "click #add":"addLine"
         },
 
+        initialize:function () {
+            this.model.on("reset", this.render, this);
+            this.model.on("sync", this.render, this);
+        },
         renderTemplate:function (json) {
             var $expenseElement = $(_.template(template, json));
             _.each(json.lines, function (line, index) {
@@ -27,7 +26,7 @@ define([
         render:function () {
             var $element = this.renderTemplate(this.model.toJSON());
             this.setElement($element);
-            $('#content').replaceWith($element);
+            $('#content').html(this.$el);
         },
 
         saveExpense:function () {
