@@ -1,4 +1,4 @@
-<form name="exp" id="content">
+<form name="exp" id="expense-details-form">
     <table class="table table-striped container">
         <thead>
         <tr>
@@ -7,10 +7,10 @@
             </td>
 
             <td class="span1">
-                Du <input type="date" id="startDate" class="span2" value="<%= startDate %>">
+                Du <input type="date" id="startDate" name="startDate" class="span2" value="<%= startDate %>">
             </td>
             <td class="span1">
-               au <input type="date" id="endDate" class="span2" value="<%= endDate %>">
+               au <input type="date" id="endDate" name="endDate" class="span2" value="<%= endDate %>">
             </td>
             <td style="text-align:right" class="span3">
                 <a id="add" class="btn"><i class="icon-plus-sign"></i> Add Line</a>
@@ -21,7 +21,7 @@
         <% _.each(lines,function(line){ %>
         <tr id="<%= id %>">
             <td id="expense-line" colspan="4" class="input-append">
-                <select  id="expenseType" name="type" class="span2">
+                <select  id="expenseType" name="expenseType" class="span2">
                     <option value="Lodging" >Lodging</option>
                     <option value="Phone">Phone</option>
                     <option value="Internet">Internet</option>
@@ -30,11 +30,11 @@
                     <option value="Gas">Gas</option>
                     <option value="Other">Misc.</option>
                 </select>
-                <input type="text" id="description" placeholder="Description" class="span3" autofocus="" value="<%= line.description %>">
+                <input type="text" id="description" name="description" placeholder="Description" class="span3" autofocus="" value="<%= line.description %>">
                 <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
-                <input type="date" id="valueDate" data-datepicker="datepicker"  class="span" value="<%= line.valueDate %>">
-                <input type="number" id="amount" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
-                 <input type="file"  id="evidence" class="span3" value="<%= line.evidence %>">
+                <input type="date" id="valueDate" name="valueDate" data-datepicker="datepicker"  class="span" value="<%= line.valueDate %>">
+                <input type="number" id="amount" name="amount" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
+                <input type="file"  id="evidence" name="evidence" class="span3" value="<%= line.evidence %>">
             </td>
         </tr>
         <% }); %>
@@ -50,10 +50,4 @@
         </tr>
         </tfoot>
     </table>
-    <p class="hidden" style="visibility: hidden">
-        id: <input type="number" id="id">
-        <input type="text" id="host">
-        <input type="text" id="base">
-    </p>
-    <input type="file" name="file" style="visibility:hidden;position:absolute">
 </form>
