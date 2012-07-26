@@ -19,9 +19,7 @@ define([
 
             render: function () {
                 this.el = _.template(template,{'models':this.model.toJSON()});
-                var t=$('#content')
-                 t.html(this.el);
-                this.bind();
+                $('#content').html(this.el);
                 return this;
             },
 
@@ -33,10 +31,6 @@ define([
                 this.model.on('reset',this.render,this);
                 this.model.on('add', this.render,this);
                 this.model.on('remove',this.render, this);
-            },
-
-            unbind: function(){
-                this.model.unbind();
             }
         });
 

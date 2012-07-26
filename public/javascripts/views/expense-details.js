@@ -8,7 +8,8 @@ define([
     var ExpenseDetailsView = Backbone.View.extend({
         events:{
             "click #put":"saveExpense",
-            "click #add":"addLine"
+            "click #add":"addLine",
+            "click #home":"close"
         },
 
         initialize:function () {
