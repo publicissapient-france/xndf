@@ -6,7 +6,6 @@ define([
     'text!../../tpl/home.html' ],
     function ($, _, Backbone, Expenses, template) {
         var HomeView = Backbone.View.extend({
-            el: '#content',
 
             events:{
                 "click #get":"refresh"
@@ -18,8 +17,8 @@ define([
             },
 
             render: function () {
-                this.el = _.template(template,{'models':this.model.toJSON()});
-                $('#content').html(this.el);
+                this.el=_.template(template,{'models':this.model.toJSON()});
+                this.slot.html(this.el);
                 return this;
             },
 

@@ -13,6 +13,7 @@ define([
         },
 
         initialize:function () {
+            this.slot=this.options.slot;
             this.model.on("reset", this.render, this);
             this.model.on("sync", this.render, this);
         },
@@ -27,7 +28,8 @@ define([
         render:function () {
             var $element = this.renderTemplate(this.model.toJSON());
             this.setElement($element);
-            $('#content').html(this.$el);
+            this.slot.html(this.el);
+            return this;
         },
 
         saveExpense:function () {
