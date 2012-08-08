@@ -8,16 +8,20 @@ define([
         var HomeView = Backbone.View.extend({
 
             events:{
-                "click #get":"refresh"
-            },
+                "click #get":"refresh",
+                "click tr": "navigate_row"
 
+            },
+            navigate_row: function (event){
+                $(event.currentTarget).find('a')[0].click();
+            },
             initialize: function(){
                 this.bind();
                 this.refresh();
             },
 
             render: function () {
-                this.el=_.template(template,{'models':this.model.toJSON()});
+                this.$el.html(_.template(template,{'models':this.model.toJSON()}));
                 this.slot.html(this.el);
                 return this;
             },
