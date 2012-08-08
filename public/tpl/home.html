@@ -5,8 +5,8 @@
 <table class="table table-striped">
     <% _.each(models, function(expense) { %>
     <tr>
-        <td><a href="#expense/<%=expense.id%>"><%= expense.startDate %> <i class="icon-play"></i> <%= expense.endDate  %></a></td>
-        <td style="text-align:right;padding-right:15px"><%= expense.total %></td>
+        <td><a href="#expense/<%=expense.id%>"></a><%= expense.startDate %> <i class="icon-play"></i> <%= expense.endDate  %></td>
+        <td class="total"><%= expense.total %></td>
     </tr>
     <% });%>
 </table>

@@ -1,5 +1,5 @@
 header, footer {
-    background-color: black;
+    background-color: #653A71;
     color: white;
     padding: 5px 10px 5px 10px;
     position: relative;
@@ -10,6 +10,7 @@ header 	a:last-child, footer a:last-child{
     right: 10px;
 }
 .table .total {
+    color: #414141;
     text-align: right;
     padding-right: 20px;
     font-weight: bold;
