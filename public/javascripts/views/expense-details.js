@@ -20,14 +20,13 @@ define([
         renderTemplate:function (json) {
             var $expenseElement = $(_.template(template, json));
             _.each(json.lines, function (line, index) {
-                $expenseElement.find('#expenseType')[index].value=line.expenseType;
+                $expenseElement.find('[name="expenseType"]')[index].value=line.expenseType;
             });
             return $expenseElement;
         },
 
         render:function () {
-            var $element = this.renderTemplate(this.model.toJSON());
-            this.setElement($element);
+            this.$el.html(this.renderTemplate(this.model.toJSON()));
             this.slot.html(this.el);
             return this;
         },
@@ -38,10 +37,10 @@ define([
             var lines = _.map(elements, function (template) {
                 t = $(template);
                 return {
-                    "expense":(+t.find('#amount').val()),
-                    "description":t.find('#description').val(),
-                    "valueDate":t.find('#valueDate').val(),
-                    "expenseType":t.find('#expenseType').val(),
+                    "expense":(+t.find('[name="amount"]').val()),
+                    "description":t.find('[name="description"]').val(),
+                    "valueDate":t.find('[name="valueDate"]').val(),
+                    "expenseType":t.find('[name="expenseType"]').val(),
                     "account":"Xebia"
                 };
             });
@@ -49,9 +48,9 @@ define([
                 this.model.unset('id')
             }
             this.model.save({
-                startDate:$('#startDate').val(),
-                endDate:$('#endDate').val(),
-                total:$('#total').val(),
+                startDate:$('[name="startDate"]').val(),
+                endDate:$('[name="endDate"]').val(),
+                total:$('[name="total"]').val(),
                 lines:lines
             });
             return false;
