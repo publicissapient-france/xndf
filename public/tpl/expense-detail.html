@@ -1,22 +1,11 @@
 <form name="exp" id="expense-details-form">
-    <table class="table table-striped container">
-        <thead>
-        <tr>
-            <td class="span1">
-                <h3><i class="icon-plus icon-white"></i> New</h3>
-            </td>
-
-            <td class="span1">
-                Du <input type="date" id="startDate" name="startDate" class="span2" value="<%= startDate %>">
-            </td>
-            <td class="span1">
-               au <input type="date" id="endDate" name="endDate" class="span2" value="<%= endDate %>">
-            </td>
-            <td style="text-align:right" class="span3">
-                <a id="add" class="btn"><i class="icon-plus-sign"></i> Add Line</a>
-            </td>
-        </tr>
-        </thead>
+        <header>
+        <i class="icon-plus icon-white"></i> New</h3>
+        Du <input type="date" id="startDate" name="startDate" value="<%= startDate %>">
+        au <input type="date" id="endDate" name="endDate" value="<%= endDate %>">
+        <a id="add" class="btn"><i class="icon-plus-sign"></i> Add Line</a>
+        </header>
+    <table class="table table-striped">
         <tbody>
         <% _.each(lines,function(line){ %>
         <tr id="<%= id %>">
@@ -39,15 +28,9 @@
         </tr>
         <% }); %>
         </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="2">
-                <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
-            </td>
-            <td style="text-align:right" class="input-append" colspan="2">
-                <input type="text" id="sum" class="span1" readonly="" value="<%=total%>"><span class="add-on">€</span><a id="put" class="btn"><i class="icon-ok"></i> Ok</a>
-            </td>
-        </tr>
-        </tfoot>
     </table>
+    <footer>
+        <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
+        <input type="text" id="sum" readonly="" value="<%=total%>"><span class="add-on">€</span><a id="put" class="btn"><i class="icon-ok"></i> Ok</a>
+    </footer>
 </form>
