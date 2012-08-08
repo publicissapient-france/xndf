@@ -1,19 +1,27 @@
-tfoot tr:last-child td, thead td {
-    background-color: #333;
+header, footer {
+    background-color: black;
     color: white;
+    padding: 5px 10px 5px 10px;
+    position: relative;
 }
-
-a {
+header 	a:last-child, footer a:last-child{
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+.table .total {
+    text-align: right;
+    padding-right: 20px;
     font-weight: bold;
 }
-
-.hide {
-    position: absolute;
-    visibility: hidden;
+.table {
+    margin-bottom: 0px;
 }
-
+.container {
+    width: 100%;
+}
 @media (min-width: 768px) {
     .container {
-        width: 724px;
+        width: 768px;
     }
 }

@@ -1,32 +1,16 @@
-<form name="f" id="f">
-<table class="table table-striped container">
-    <thead>
-    <tr>
-        <td><h3><i class="icon-list icon-white" style="margin-top:3px"></i> Expenses</h3></td>
-        <td style="text-align:right">
-            <a id="new" class="btn span2" href="#expense/new"><i class="icon-pencil"></i> New Expense</a>
-        </td>
-    </tr>
-    </thead>
-    <tbody>
+<header>
+        <h3><i class="icon-list icon-white" style="margin-top:3px"></i> Expenses</h3>
+        <a id="new" class="btn span2" href="#expense/new"><i class="icon-pencil"></i> New Expense</a>
+</header>
+<table class="table table-striped">
     <% _.each(models, function(expense) { %>
     <tr>
-        <td><a href="#expense/<%=expense.id%>"><input type="radio" name="expense-items" id="<%=expense.id%>"> <%= expense.startDate %> <i class="icon-play"/> <%= expense.endDate  %></a></td>
+        <td><a href="#expense/<%=expense.id%>"><%= expense.startDate %> <i class="icon-play"></i> <%= expense.endDate  %></a></td>
         <td style="text-align:right;padding-right:15px"><%= expense.total %></td>
     </tr>
     <% });%>
-    </tbody>
-    <tfoot>
-    <tr>
-        <td>
-            <input type="text" name="id" placeholder="id" class="hide">
-            <input type="text" name="rev" placeholder="rev" class="hide">
-            <a id="delete" class="btn btn-danger"><i class="icon-fire icon-white"></i> Delete</a>
-        </td>
-        <td style="text-align:right">
-            <a id="get" class="btn btn-inverse span2"><i class="icon-repeat icon-white"></i> Reload</a>
-        </td>
-    </tr>
-    </tfoot>
 </table>
-</form>
+<footer>
+    <a id="delete" class="btn btn-danger"><i class="icon-fire icon-white"></i> Delete</a>
+    <a id="get" class="btn btn-inverse span2"><i class="icon-repeat icon-white"></i> Reload</a>
+</footer>
