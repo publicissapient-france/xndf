@@ -3,17 +3,26 @@ define([
     'Underscore',
     'Backbone'
 ], function (_, Backbone) {
+    var serverDate=function(date){
+        return date.toISOString().substr(0,10);
+    } ;
+    var monthStart = function(date){
+        return new Date(date.getFullYear(), date.getMonth(),1,12,00,00);
+    };
+    var monthEnd = function(date){
+        return new Date(new Date(date.getFullYear(), date.getMonth()+1,1,0,0,0)-1);
+    };
     var Expense = Backbone.Model.extend({
             urlRoot:"/expenses",
             defaults:{
-                startDate:new Date(),
-                endDate:new Date(),
+                startDate:serverDate(monthStart(new Date())),
+                endDate:serverDate(monthEnd(new Date())),
                 total:0,
                 id:null,
                 lines:[{
                     expense:"0.0",
                     description:"",
-                    valueDate: new Date(),
+                    valueDate:serverDate(new Date()),
                     expenseType:"",
                     id:null
                 }]
