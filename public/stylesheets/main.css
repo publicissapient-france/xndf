@@ -4,22 +4,35 @@ header, footer {
     padding: 5px 10px 5px 10px;
     position: relative;
 }
-header 	a:last-child, footer a:last-child{
+header 	a:last-child, footer a:last-child, footer span:last-child{
     position: absolute;
     top: 5px;
     right: 10px;
 }
-.table .total {
+
+td.total, input.total {
     color: #414141;
     text-align: right;
     padding-right: 20px;
     font-weight: bold;
+    width: 60px;
+    margin-bottom: 0px;
 }
 .table {
     margin-bottom: 0px;
 }
+
 .container {
     width: 100%;
+}
+
+input[type="date"]{
+    width: 120px;
+    margin-bottom: 0px;
+}
+
+footer .add-on{
+    color: #000000;
 }
 @media (min-width: 768px) {
     .container {

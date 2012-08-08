@@ -1,16 +1,16 @@
 <form name="exp" id="expense-details-form">
-        <header>
+    <header>
         <i class="icon-plus icon-white"></i> New</h3>
-        Du <input type="date" id="startDate" name="startDate" value="<%= startDate %>">
-        au <input type="date" id="endDate" name="endDate" value="<%= endDate %>">
+        Du <input class="datepicker" type="date" name="startDate" value="<%= startDate %>">
+        au <input class="datepicker" type="date" name="endDate" value="<%= endDate %>">
         <a id="add" class="btn"><i class="icon-plus-sign"></i> Add Line</a>
-        </header>
+    </header>
     <table class="table table-striped">
         <tbody>
         <% _.each(lines,function(line){ %>
         <tr id="<%= id %>">
             <td id="expense-line" colspan="4" class="input-append">
-                <select  id="expenseType" name="expenseType" class="span2">
+                <select name="expenseType" class="span2">
                     <option value="Lodging" >Lodging</option>
                     <option value="Phone">Phone</option>
                     <option value="Internet">Internet</option>
@@ -19,18 +19,19 @@
                     <option value="Gas">Gas</option>
                     <option value="Other">Misc.</option>
                 </select>
-                <input type="text" id="description" name="description" placeholder="Description" class="span3" autofocus="" value="<%= line.description %>">
+                <input type="text" name="description" placeholder="Description" class="span3" autofocus="" value="<%= line.description %>">
                 <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
-                <input type="date" id="valueDate" name="valueDate" data-datepicker="datepicker"  class="span" value="<%= line.valueDate %>">
-                <input type="number" id="amount" name="amount" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
-                <input type="file"  id="evidence" name="evidence" class="span3" value="<%= line.evidence %>">
+                <input type="date" name="valueDate" data-datepicker="datepicker"  class="span" value="<%= line.valueDate %>">
+                <input type="number" name="amount" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
+                <input type="file"  name="evidence" class="span3" value="<%= line.evidence %>">
             </td>
         </tr>
         <% }); %>
         </tbody>
     </table>
-    <footer>
+    <footer class="input-append">
         <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
-        <input type="text" id="sum" readonly="" value="<%=total%>"><span class="add-on">€</span><a id="put" class="btn"><i class="icon-ok"></i> Ok</a>
+        <input class="total" type="number" name="sum" value="<%=total%>"><span class="add-on">€</span> <a id="put" class="btn">
+        <i class="icon-ok"></i> Ok</a>
     </footer>
 </form>
