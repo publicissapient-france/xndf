@@ -17,15 +17,14 @@ define([
             defaults:{
                 startDate:serverDate(monthStart(new Date())),
                 endDate:serverDate(monthEnd(new Date())),
-                total:0,
-                id:null,
-                lines:[{
-                    expense:"0.0",
+                total:0.0,
+                lines:[$.extend({},{
+                    expense:0.0,
                     description:"",
                     valueDate:serverDate(new Date()),
-                    expenseType:"",
-                    id:null
-                }]
+                    expenseType:"Lodging",
+                    account:"xebia"
+                })]
             }
         })
         ;

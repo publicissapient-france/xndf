@@ -7,10 +7,10 @@
     </header>
     <table class="table table-striped">
         <tbody>
-        <% _.each(lines,function(line){ %>
-        <tr id="<%= id %>">
+        <% _.each(lines,function(line,index){ %>
+        <tr id="<%= index %>">
             <td id="expense-line" colspan="4" class="input-append">
-                <select name="expenseType" class="span2">
+                <select name="lines.<%=index%>.expenseType" class="span2">
                     <option value="Lodging" >Lodging</option>
                     <option value="Phone">Phone</option>
                     <option value="Internet">Internet</option>
@@ -19,11 +19,11 @@
                     <option value="Gas">Gas</option>
                     <option value="Other">Misc.</option>
                 </select>
-                <input type="text" name="description" placeholder="Description" class="span3" autofocus="" value="<%= line.description %>">
+                <input type="text" name="lines.<%=index%>.description" placeholder="Description" class="span3" autofocus="" value="<%= line.description %>">
                 <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
-                <input type="date" name="valueDate" data-datepicker="datepicker"  class="span" value="<%= line.valueDate %>">
-                <input type="number" name="amount" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
-                <input type="file"  name="evidence" class="span3" value="<%= line.evidence %>">
+                <input type="date" name="lines.<%=index%>.valueDate" data-datepicker="datepicker"  class="span" value="<%= line.valueDate %>">
+                <input type="number" name="lines.<%=index%>.expense" class="span1" value="<%= line.expense %>"><span class="add-on">€</span>
+                <input type="file"  name="lines.<%=index%>.evidence" class="span3" value="<%= line.evidence %>">
             </td>
         </tr>
         <% }); %>
