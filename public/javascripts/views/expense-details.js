@@ -4,7 +4,7 @@ define([
     'Backbone',
     'models/expense',
     'text!../../tpl/expense-detail.html'
-], function ($, _, Backbone, expense, template) {
+], function ($, _, Backbone, Expense, template) {
     var ExpenseDetailsView = Backbone.View.extend({
         events:{
             "click #put":"saveExpense",
@@ -16,6 +16,7 @@ define([
             this.slot=this.options.slot;
             this.model.on("reset", this.render, this);
             this.model.on("sync", this.render, this);
+            this.model.on("change", this.render, this);
         },
         renderTemplate:function (json) {
             var $expenseElement = $(_.template(template, json));
@@ -56,9 +57,8 @@ define([
             return false;
         },
         addLine:function () {
-            var $table = $("#content table");
-            var $element = this.renderTemplate(this.model.defaults);
-            $table.append($element.find('table tbody tr'));
+            var defaultExpense = new Expense();
+            this.model.set({lines: this.model.get('lines').concat(defaultExpense.defaults.lines)}) ;
         },
         close:function () {
             $(this.el).unbind();
