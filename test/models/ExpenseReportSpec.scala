@@ -13,14 +13,14 @@ import play.api.libs.json.Json._
 import models.ExpenseFormat._
 
 class ExpenseReportSpec extends Specification {
-  val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance.prepare(new MongodConfig(Version.V2_0, 27017, false))
+  val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance.prepare(new MongodConfig(Version.V2_0, 27181, false))
   val mongod: MongodProcess = mongodExe.start()
 
   def inMemoryMongoDatabase(source:String,name: String = "default"): Map[String, String] = {
     val dbname: String = "play-test-" + scala.util.Random.nextInt
     println("\nSource: "+source+": dbname = "+dbname+"\n")
     Map(
-      ("mongodb." + name + ".db" -> dbname)
+      ("mongodb."+name+".uri" -> ("mongodb://127.0.0.1:27181/"+dbname))
     )
   }
 
@@ -75,7 +75,7 @@ class ExpenseReportSpec extends Specification {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
       val Some(expenseReport1)= ExpenseReport.findById(new ObjectId("111111111111111111111111"))
-      val Some(user) = User.findByVerifiedId("id1")
+      val Some(user) = User.findByEmail("email1")
       expenseReport1.userId===user.id
       println("expenseReport1 in find by userId and id")
       println(expenseReport1.id.toString)

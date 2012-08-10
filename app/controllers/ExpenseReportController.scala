@@ -11,7 +11,7 @@ object ExpenseReportController extends Controller with Secured {
   def index = IsAuthenticated {
     userId => implicit request =>
 
-      val user: Option[User] = User.findByVerifiedId(userId)
+      val user: Option[User] = User.findByEmail(userId)
       user.map({
         user =>
           val expenseReports: List[ExpenseReport] = ExpenseReport.findAllByUserId(user.id)
@@ -22,7 +22,7 @@ object ExpenseReportController extends Controller with Secured {
   def show(id: String) = IsAuthenticated {
     userId => implicit request =>
       val result = for {
-        user <- User.findByVerifiedId(userId)
+        user <- User.findByEmail(userId)
         expenseReport <- ExpenseReport.findByIdAndUserID(new ObjectId(id), user.id)
       } yield Ok(toJson(expenseReport))
       result.getOrElse(BadRequest("fail"))
@@ -31,7 +31,7 @@ object ExpenseReportController extends Controller with Secured {
   def create = IsAuthenticated(parse.json) {
     userId => implicit request =>
       val jsReport = request.body
-      User.findByVerifiedId(userId).map {
+      User.findByEmail(userId).map {
         user =>
           val toExpenseReport = jsReport.as[User => ExpenseReport]
           val expenseReport = toExpenseReport(user)
@@ -44,7 +44,7 @@ object ExpenseReportController extends Controller with Secured {
   def update(id: String) = IsAuthenticated(parse.json) {
     userId => implicit request =>
       val jsReport = request.body
-      User.findByVerifiedId(userId).map {
+      User.findByEmail(userId).map {
         user =>
           val toExpenseReport = jsReport.as[User => ExpenseReport]
           val expenseReport = toExpenseReport(user)

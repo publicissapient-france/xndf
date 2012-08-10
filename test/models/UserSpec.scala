@@ -14,14 +14,14 @@ import org.specs2.execute.Result
 
 class UserSpec extends Specification {
 
-  val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance().prepare(new MongodConfig(Version.V2_0, 27017, false))
+  val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance().prepare(new MongodConfig(Version.V2_0, 27180, false))
   val mongod: MongodProcess = mongodExe.start();
 
   def inMemoryMongoDatabase(name: String = "default"): Map[String, String] = {
     val dbname: String = "play-test-" + scala.util.Random.nextInt
     println(dbname)
     Map(
-      ("mongodb." + name + ".db" -> dbname)
+      ("mongodb."+name+".uri" -> ("mongodb://127.0.0.1:27180/"+dbname))
     )
   }
 
@@ -53,8 +53,8 @@ class UserSpec extends Specification {
   }
 
   "A user " can {
-    "be retrieved by verifiedId" in populatedApp {
-      val Some(user) = User.findByVerifiedId("id2")
+    "be retrieved by email" in populatedApp {
+      val Some(user) = User.findByEmail("email2")
       user.name === "John Smith"
     }
 
@@ -68,7 +68,7 @@ class UserSpec extends Specification {
 
     "be created and saved in the database" in populatedApp {
       val u = User.create("Josiane", "email3", "id3")
-      User.count() === 3 and u.name === User.findByVerifiedId("id3").get.name
+      User.count() === 3 and u.name === User.findByEmail("email3").get.name
     }
 
     "be authenticated when user exists" in populatedApp {

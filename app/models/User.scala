@@ -27,15 +27,15 @@ object User extends ModelCompanion[User, ObjectId] {
     find(MongoDBObject.empty).toList
   }
 
-  def findByVerifiedId(verifiedId: String): Option[User] = {
-    findOne(MongoDBObject("verifiedId" -> verifiedId))
+  def findByEmail(email: String): Option[User] = {
+    findOne(MongoDBObject("email" -> email))
   }
 
   /**
    * Authenticate a User.
    */
   def authenticate(name: String, email: String, verifiedId: String): User = {
-    findOne(MongoDBObject("verifiedId" -> verifiedId, "email" -> email)).getOrElse(
+    findOne(MongoDBObject("email" -> email)).getOrElse(
       User.create(name, email, verifiedId))
   }
 

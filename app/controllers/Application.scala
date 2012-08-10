@@ -62,7 +62,7 @@ trait Application {
       }).map( _ match {
         case Right(user) => {
           val uri = request.session.get("before_auth_requested_url").getOrElse(routes.Application.index())
-          Redirect(uri.toString,Http.Status.MOVED_PERMANENTLY).withSession("verifiedId"->user.verifiedId)
+          Redirect(uri.toString,Http.Status.MOVED_PERMANENTLY).withSession("email"->user.email)
         }
         case Left(error) => Redirect(routes.Application.login()).flashing("error"->error)
       }
@@ -96,7 +96,7 @@ trait Secured {
   /**
    * Retrieve the connected user email.
    */
-  private def username(request: RequestHeader) = request.session.get("verifiedId")
+  private def username(request: RequestHeader) = request.session.get("email")
 
   /**
    * Redirect to login if the user in not authorized.
