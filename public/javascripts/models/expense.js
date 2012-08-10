@@ -12,23 +12,32 @@ define([
     var monthEnd = function(date){
         return new Date(new Date(date.getFullYear(), date.getMonth()+1,1,0,0,0)-1);
     };
+
     var Expense = Backbone.Model.extend({
-            urlRoot:"/expenses",
-            defaults:{
-                startDate:serverDate(monthStart(new Date())),
-                endDate:serverDate(monthEnd(new Date())),
-                total:0.0,
-                lines:[$.extend({},{
-                    expense:0.0,
-                    description:"",
-                    valueDate:serverDate(new Date()),
-                    expenseType:"Lodging",
-                    account:"xebia"
-                })]
+        urlRoot:"/expenses",
+        initialize:function(){
+            if(this.isNew()){
+                this.addLine();
             }
-        })
-        ;
-// You usually don't return a model instantiated
+        },
+        addLine : function(){
+           this.set('lines', this.get('lines').concat(
+                [_.clone({
+                    expense: 0.0,
+                    description: " ",
+                    valueDate: serverDate(new Date()),
+                    expenseType: "Lodging",
+                    account: "xebia"
+                })]
+            ));
+        },
+        defaults:{
+            startDate:serverDate(monthStart(new Date())),
+            endDate:serverDate(monthEnd(new Date())),
+            total:0.0,
+            lines:[]
+        }
+    });
     return Expense;
 })
 ;

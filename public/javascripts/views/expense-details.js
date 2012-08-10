@@ -32,13 +32,13 @@ define([
             setValue(this.model.attributes, path.shift(),path,value);
         },
 
-
         initialize:function () {
             this.slot=this.options.slot;
             this.model.on("reset", this.render, this);
             this.model.on("sync", this.render, this);
             this.model.on("change", this.render, this);
         },
+
         renderTemplate:function (json) {
             var $expenseElement = $(_.template(template, json));
             _.each(json.lines, function (line, index) {
@@ -57,13 +57,14 @@ define([
             this.model.save();
             return false;
         },
+
         addLine:function () {
-            var defaultExpense = new Expense();
-            this.model.set({lines: this.model.get('lines').concat(defaultExpense.get('lines'))}) ;
+            this.model.addLine()
         },
+
         close:function () {
-            $(this.el).unbind();
-            $(this.el).empty();
+            this.$el.unbind();
+            this.$el.empty();
         }
 
     });
