@@ -99,7 +99,8 @@ puis aller dans la console play et taper gen-idea
 - `~ [command]` joue [command] en continu (compile et test sont de bonnes idées)
 - `run` lance l'application
 
-Developper sur X-NDF front
-----------
 
-Pas la moindre idée pour l'instant : TODO
+License
+--------
+
+See LICENSE file.
