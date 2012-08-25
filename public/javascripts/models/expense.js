@@ -16,20 +16,23 @@ define([
     var Expense = Backbone.Model.extend({
         urlRoot:"/expenses",
         initialize:function(){
-            if(this.isNew()){
-                this.addLine();
-            }
+            this.currentLine = this.newLine();
         },
-        addLine : function(){
-           this.set('lines', this.get('lines').concat(
-                [_.clone({
-                    expense: 0.0,
-                    description: " ",
-                    valueDate: serverDate(new Date()),
-                    expenseType: "Lodging",
-                    account: "xebia"
-                })]
-            ));
+        newLine:function(){
+            return new _.clone({
+                expense: 0.0,
+                description: "",
+                valueDate: serverDate(new Date()),
+                expenseType: "Internet",
+                account: "xebia"
+            });
+        },
+        saveCurrentLine : function() {
+            line=this.currentLine;
+            this.currentLine= this.newLine();
+            if(this.get('lines').indexOf(line)==-1){
+                this.set('lines', this.get('lines').concat([line]));
+            }
         },
         defaults:{
             startDate:serverDate(monthStart(new Date())),
