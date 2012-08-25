@@ -4,11 +4,6 @@ header, footer {
     padding: 5px 10px 5px 10px;
     position: relative;
 }
-header 	a:last-child, footer a:last-child, footer span:last-child{
-    position: absolute;
-    top: 5px;
-    right: 10px;
-}
 
 td.total, input.total {
     color: #414141;

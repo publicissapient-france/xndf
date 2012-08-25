@@ -1,6 +1,6 @@
 <header>
-        <h3><i class="icon-list icon-white" style="margin-top:3px"></i> Expenses</h3>
-        <a id="new" class="btn span2" href="#expense/new"><i class="icon-pencil"></i> New Expense</a>
+        <h3 style="display: inline;"><i class="icon-list icon-white" style="margin-top:3px"></i> Expenses</h3>
+        <a id="new" class="btn pull-right" href="#expense/new"><i class="icon-pencil"></i> New Expense</a>
 </header>
 <table class="table table-striped">
     <% _.each(models, function(expense) { %>
@@ -12,5 +12,5 @@
 </table>
 <footer>
     <a id="delete" class="btn btn-danger"><i class="icon-fire icon-white"></i> Delete</a>
-    <a id="get" class="btn btn-inverse span2"><i class="icon-repeat icon-white"></i> Reload</a>
+    <a id="get" class="btn btn-inverse pull-right"><i class="icon-repeat icon-white"></i> Reload</a>
 </footer>
