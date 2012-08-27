@@ -10,6 +10,8 @@ GET     /expenses                   controllers.ExpenseReportController.index
 GET     /expenses/:id               controllers.ExpenseReportController.show(id:String)
 POST    /expenses                   controllers.ExpenseReportController.create
 PUT     /expenses/:id               controllers.ExpenseReportController.update(id:String)
+
+POST    /evidences                  controllers.EvidenceController.create
 # Authentication
 GET     /login                      controllers.Application.login
 POST    /authenticate               controllers.Application.authenticate
