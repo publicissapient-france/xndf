@@ -4,8 +4,8 @@
 require.config({
     paths: {
         //jquery: 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery',
-        //jquery: 'libs/jquery-1.7.2.min',
-        zepto: 'libs/zepto',
+        zepto: 'libs/jquery-1.7.2.min',
+        //zepto: 'libs/zepto',
         hogan: 'http://twitter.github.com/hogan.js/builds/2.0.0/hogan-2.0.0.js',
         Underscore: 'libs/underscore/underscore-min',
         Backbone: 'libs/backbone/backbone',

@@ -12,21 +12,17 @@ define([
         events:{
             "click #put":"saveExpense",
             "click #home":"close",
+            "click #add_file":"addFile",
             "change header":"change",
             "change footer":"change",
             "click tr[name='line']":"editLine",
             "click #save_line":"saveLine",
-            "change #line_form" :"changeLine"
+            "change #line_form" :"changeLine",
+            "change #hidden-file": "saveFile"
         },
-                         /*
-                          [_.clone({
-                          expense: 0.0,
-                          description: " ",
-                          valueDate: serverDate(new Date()),
-                          expenseType: "Lodging",
-                          account: "xebia"
-                          })]
-                         * */
+        addFile:function(){
+            $('#hidden-file')[0].click();
+        },
         editLine:function(event){
             target=event.currentTarget;
             index=target.attributes['data-id'].nodeValue;
@@ -96,7 +92,29 @@ define([
         close:function () {
             this.$el.unbind();
             this.$el.empty();
+        },
+
+        saveFile:function(){
+            var self = this;
+            var data = new FormData();
+            var file = $("#hidden-file")[0].files[0];
+            data.append('file', file);
+            $.ajax({
+                url: '/evidences',
+                type: 'POST',
+                data: data,
+                processData: false,
+                cache: false,
+                contentType: false
+            })
+                .done(function () {
+                    console.log(file.name + " uploaded successfully");
+                })
+                .fail(function () {
+                    self.showAlert('Error!', 'An error occurred while uploading ' + file.name, 'alert-error');
+                });
         }
+
 
     });
     return ExpenseDetailsView;

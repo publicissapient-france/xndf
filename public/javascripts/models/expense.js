@@ -24,7 +24,8 @@ define([
                 description: "",
                 valueDate: serverDate(new Date()),
                 expenseType: "Internet",
-                account: "xebia"
+                account: "xebia" ,
+                evidences:[]
             });
         },
         saveCurrentLine : function() {
