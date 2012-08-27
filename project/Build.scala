@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
     val resolvers = Seq("scala-tools release" at "http://scala-tools.org/repo-releases/")
     val appDependencies = Seq(
       "de.flapdoodle.embedmongo" % "de.flapdoodle.embedmongo" % "1.11",
-      "se.radley" %% "play-plugins-salat" % "1.0.7"
+      "se.radley" %% "play-plugins-salat" % "1.0.9"
     )
 
 
