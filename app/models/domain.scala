@@ -14,6 +14,9 @@ import se.radley.plugin.salat._
 import play.api.libs.json.JsString
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsNumber
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.libs.Files.TemporaryFile
+import com.mongodb.casbah.gridfs.GridFSInputFile
 
 case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine]) {
   lazy val lines = _lines
@@ -37,6 +40,17 @@ case class ExpenseLine(valueDate: Date,
                        account: String,
                        description: String,
                        expense: Expense) {
+}
+
+object Evidence {
+  import libs.mongo._
+  def save(part: FilePart[TemporaryFile]): Option[ObjectId] = {
+    val newFile: GridFSInputFile = gridFS("default").createFile(part.ref.file)
+    newFile.filename=part.filename
+    part.contentType.map(contentType => newFile.contentType = contentType)
+    newFile.save()
+    newFile._id
+  }
 }
 
 object ExpenseLine {
@@ -84,9 +98,6 @@ object ExpenseReport extends ModelCompanion[ExpenseReport, ObjectId] {
     findOneById(id)
   }
 
-//  def count() = {
-//    count(MongoDBObject.empty)
-//  }
 }
 
 object ExpenseFormat {
@@ -107,16 +118,15 @@ object ExpenseFormat {
   }
 
   implicit object ExpenseReportReads extends Reads[User => ExpenseReport] {
-    def reads(json: JsValue) = {
-      user =>
-        val expenseReportId: ObjectId = (json \ "id").asOpt[String].map(new ObjectId(_)).getOrElse(new ObjectId())
-        ExpenseReport(
-          expenseReportId,
-          (json \ "startDate").as[Date],
-          (json \ "endDate").as[Date],
-          user.id,
-          (json \ "lines").as[Seq[ExpenseLine]]
-        )
+    def reads(json: JsValue) = { user =>
+      val expenseReportId: ObjectId = (json \ "id").asOpt[String].map(new ObjectId(_)).getOrElse(new ObjectId())
+      ExpenseReport(
+        expenseReportId,
+        (json \ "startDate").as[Date],
+        (json \ "endDate").as[Date],
+        user.id,
+        (json \ "lines").as[Seq[ExpenseLine]]
+      )
     }
   }
 }
@@ -134,8 +144,8 @@ object Expense {
       case "Internet" => Internet(amount)
       case "Other" => Other(amount)
     }
-
   }
+
 }
 
 @Salat
