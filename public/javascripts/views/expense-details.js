@@ -8,6 +8,9 @@ define([
     var serverDate=function(date){
         return date.toISOString().substr(0,10);
     } ;
+    var successesToOids=function(success){
+        return success.oid;
+    }
     var ExpenseDetailsView = Backbone.View.extend({
         events:{
             "click #put":"saveExpense",
@@ -114,11 +117,10 @@ define([
                 cache: false,
                 contentType: false
             })
-                .done(function () {
-                    console.log(file.name + " uploaded successfully");
+                .done(function (data) {
+                    self.model.currentLine.evidences= _.union(self.model.currentLine.evidences,data.success.map(function(d){return d.oid;}));
                 })
                 .fail(function () {
-                    self.showAlert('Error!', 'An error occurred while uploading ' + file.name, 'alert-error');
                 });
         }
 
