@@ -40,11 +40,11 @@ class ExpenseReportSpec extends Specification {
         user.save()
         val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
         ExpenseReport(new ObjectId("111111111111111111111111"), date, date, user.id, Seq())
-          .addLine(date, "xebia", "description", Internet(15.99))
-          .addLine(date, "xebia", "description", Internet(15.99)).save
+          .addLine(date, "xebia", "description", Internet(15.99),Seq())
+          .addLine(date, "xebia", "description", Internet(15.99),Seq()).save
         ExpenseReport(new ObjectId(), date, date, user.id, Seq())
-          .addLine(date, "xebia", "description", Internet(15.99))
-          .addLine(date, "xebia", "description", Internet(15.99)).save
+          .addLine(date, "xebia", "description", Internet(15.99),Seq())
+          .addLine(date, "xebia", "description", Internet(15.99),Seq()).save
         t // execute t inside a http session
       }
     }
@@ -55,8 +55,8 @@ class ExpenseReportSpec extends Specification {
       ExpenseReport.count() === 0
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
       val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId(), Seq())
-        .addLine(date, "xebia", "description", Internet(15.99))
-        .addLine(date, "xebia", "description", Internet(15.99))
+        .addLine(date, "xebia", "description", Internet(15.99),Seq())
+        .addLine(date, "xebia", "description", Internet(15.99),Seq())
       expenseReport.save
       ExpenseReport.count() === 1
     }
@@ -94,8 +94,8 @@ class ExpenseReportSpec extends Specification {
 
       val userId: ObjectId = new ObjectId()
       val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq())
-        .addLine(date, "xebia", "description", Internet(15.99))
-        .addLine(date, "xebia", "description", Internet(15.99))
+        .addLine(date, "xebia", "description", Internet(15.99),Seq())
+        .addLine(date, "xebia", "description", Internet(15.99),Seq())
 
       val jsExpenseReport = toJson(expenseReport)
       val toExpenseReport = jsExpenseReport.as[User => ExpenseReport]
@@ -106,8 +106,8 @@ class ExpenseReportSpec extends Specification {
 
       val userId: ObjectId = new ObjectId()
       val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq())
-        .addLine(date, "xebia", "description", Internet(15.99))
-        .addLine(date, "xebia", "description", Internet(15.99))
+        .addLine(date, "xebia", "description", Internet(15.99),Seq())
+        .addLine(date, "xebia", "description", Internet(15.99),Seq())
 
       val jsExpenseReport = toJson(expenseReport)
       val toExpenseReport = jsExpenseReport.as[User => ExpenseReport]
