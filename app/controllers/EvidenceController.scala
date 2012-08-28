@@ -19,18 +19,6 @@ object EvidenceController extends Controller with Secured {
         case (key, seq) => key -> JsArray(seq.map(_._2))
       }).toSeq
     )
-    result
-    /*
-    (
-      Seq(String,String)
-      Seq(String)
-    )
-
-    [{
-      success : [ {filename:filename3,id:id1},{filename:"",id:""},{filename:"",id:""} ]
-      error : [filename1,filename2]
-     */
-
     Ok(result)
   }
 }
