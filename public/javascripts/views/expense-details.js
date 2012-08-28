@@ -21,7 +21,9 @@ define([
             "change #hidden-file": "saveFile"
         },
         addFile:function(){
-            $('#hidden-file')[0].click();
+            $('#hidden-file')[0].disabled=false;
+            $('#hidden-file').click();
+            $('#hidden-file')[0].disabled=true;
         },
         editLine:function(event){
            var target=event.currentTarget;
