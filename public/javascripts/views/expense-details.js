@@ -60,9 +60,9 @@ define([
         },
         initialize:function () {
             this.slot=this.options.slot;
-            this.model.on("reset", this.render, this);
-            this.model.on("sync", this.render, this);
-            this.model.on("change", this.render, this);
+            this.model.on("reset", this.refreshView, this);
+            this.model.on("sync", this.refreshView, this);
+            this.model.on("change", this.refreshView, this);
         },
 
         renderTemplate:function (json) {
@@ -71,11 +71,15 @@ define([
             return $expenseElement;
         },
 
-        render:function () {
+        refreshView:function () {
             var json = this.model.toJSON();
             json.currentLine = this.model.currentLine;
             this.$el.html(this.renderTemplate(json));
-            this.slot.html(this.el);
+        },
+
+        render:function () {
+            this.refreshView();
+            $(this.slot).html(this.el);
             return this;
         },
 
@@ -86,7 +90,7 @@ define([
 
         saveLine:function () {
             this.model.saveCurrentLine();
-            this.render();
+            this.refreshView();
         },
 
         close:function () {
