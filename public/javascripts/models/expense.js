@@ -32,7 +32,7 @@ define([
             var line=this.currentLine;
             this.currentLine= this.newLine();
             if(this.get('lines').indexOf(line)==-1){
-                this.set('lines', this.get('lines').concat([line]));
+                this.get('lines').push(line);
             }
         },
         defaults:{
