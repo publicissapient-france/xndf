@@ -96,6 +96,7 @@ define([
         close:function () {
             this.$el.unbind();
             this.$el.empty();
+            this.model.unbind();
         },
 
         saveFile:function(){
