@@ -32,7 +32,7 @@ define([
            var target=event.currentTarget;
            var index=target.attributes['data-id'].nodeValue;
            this.model.currentLine=this.model.get('lines')[index];
-           this.render();
+           this.refreshView();
         },
         changeLine:function(event){
             var target = event.target;
@@ -80,6 +80,7 @@ define([
             var json = this.model.toJSON();
             json.currentLine = this.model.currentLine;
             this.$el.html(this.renderTemplate(json));
+            this.delegateEvents();
         },
 
         render:function () {
