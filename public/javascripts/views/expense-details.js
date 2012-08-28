@@ -24,16 +24,16 @@ define([
             $('#hidden-file')[0].click();
         },
         editLine:function(event){
-            target=event.currentTarget;
-            index=target.attributes['data-id'].nodeValue;
-            this.model.currentLine=this.model.get('lines')[index];
-            this.render();
+           var target=event.currentTarget;
+           var index=target.attributes['data-id'].nodeValue;
+           this.model.currentLine=this.model.get('lines')[index];
+           this.render();
         },
         changeLine:function(event){
-            target = event.target;
-            path = target.name.split('.');
+            var target = event.target;
+            var path = target.name.split('.');
             path.shift();
-            value=target.value;
+            var value=target.value;
             if(target.type=="number"){
                 value=(+target.value);
             }
@@ -41,10 +41,10 @@ define([
         },
         change:function(event){
             // Apply the change to the model
-            target = event.target;
-            path = target.name.split('.');
+            var target = event.target;
+            var path = target.name.split('.');
 
-            value=target.value;
+            var value=target.value;
             if(target.type=="number"){
                 value=(+target.value);
             }
@@ -66,14 +66,14 @@ define([
         },
 
         renderTemplate:function (json) {
-            $expenseElement = $(_.template(template, json));
+            var $expenseElement = $(_.template(template, json));
             $expenseElement.find('[name*="line.expenseType"]')[0].value=this.model.currentLine.expenseType;
             return $expenseElement;
         },
 
         render:function () {
-            json = this.model.toJSON();
-            json.currentLine=this.model.currentLine;
+            var json = this.model.toJSON();
+            json.currentLine = this.model.currentLine;
             this.$el.html(this.renderTemplate(json));
             this.slot.html(this.el);
             return this;
