@@ -74,7 +74,8 @@ object ExpenseLine {
           "account" -> JsString(line.account),
           "description" -> JsString(line.description),
           "expense" -> JsNumber(line.expense.amount),
-          "expenseType" -> JsString(line.expense.qualifier)
+          "expenseType" -> JsString(line.expense.qualifier),
+          "evidences" -> JsArray(line.evidences.map(x => JsString(x.toString())))
         )
       )
     }

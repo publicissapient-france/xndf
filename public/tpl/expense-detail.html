@@ -14,7 +14,7 @@
                 <td><%=line.description%></td>
                 <td><%=line.valueDate%></td>
                 <td><%=line.expense%>€</td>
-                <td><% if(line.evidence){%><i class="icon-file"></i> <%}%></td>
+                <td><% if(line.evidences && line.evidences.length>0){%><i class="icon-file"></i> <%}%></td>
             </tr>
             <% }); %>
             <tr id="line_form">
