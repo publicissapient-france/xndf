@@ -1,5 +1,5 @@
 define([
-    'zepto',
+    'jquery',
     'Underscore',
     'Backbone',
     'models/expenses',
