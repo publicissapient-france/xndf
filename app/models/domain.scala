@@ -14,13 +14,16 @@ import se.radley.plugin.salat._
 import play.api.libs.json.JsString
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsNumber
+import play.api.mvc.MultipartFormData.FilePart
+import play.api.libs.Files.TemporaryFile
+import com.mongodb.casbah.gridfs.GridFSInputFile
 
 case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine]) {
   lazy val lines = _lines
 
-  def addLine(valueDate: Date, account: String, description: String, expense: Expense) = {
+  def addLine(valueDate: Date, account: String, description: String, expense: Expense, evidences:Seq[ObjectId]) = {
     lazy val newParent: ExpenseReport = ExpenseReport(this.id, this.from, this.to, this.userId, line +: this.lines)
-    lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense)
+    lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense,evidences)
     newParent
   }
 
@@ -36,7 +39,19 @@ case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _
 case class ExpenseLine(valueDate: Date,
                        account: String,
                        description: String,
-                       expense: Expense) {
+                       expense: Expense,
+                       evidences:Seq[ObjectId]) {
+}
+
+object Evidence {
+  import libs.mongo._
+  def save(part: FilePart[TemporaryFile]): Option[ObjectId] = {
+    val newFile: GridFSInputFile = gridFS("default").createFile(part.ref.file)
+    newFile.filename=part.filename
+    part.contentType.map(contentType => newFile.contentType = contentType)
+    newFile.save()
+    newFile._id
+  }
 }
 
 object ExpenseLine {
@@ -47,7 +62,8 @@ object ExpenseLine {
         (value \ "valueDate").as[Date],
         (value \ "account").as[String],
         (value \ "description").as[String],
-        ((value \ "expenseType").as[String], (value \ "expense").as[Double])
+        ((value \ "expenseType").as[String], (value \ "expense").as[Double]),
+        (value \ "evidences").as[Seq[String]].map({new ObjectId(_)})
       )
     }
 
@@ -58,7 +74,8 @@ object ExpenseLine {
           "account" -> JsString(line.account),
           "description" -> JsString(line.description),
           "expense" -> JsNumber(line.expense.amount),
-          "expenseType" -> JsString(line.expense.qualifier)
+          "expenseType" -> JsString(line.expense.qualifier),
+          "evidences" -> JsArray(line.evidences.map(x => JsString(x.toString())))
         )
       )
     }
@@ -73,7 +90,7 @@ object ExpenseReport extends ModelCompanion[ExpenseReport, ObjectId] {
   }
 
   def findAllByUserId(userId: ObjectId): List[ExpenseReport] = {
-    find(MongoDBObject("userId"->userId)).toList
+    find(MongoDBObject("userId"->userId)).sort(MongoDBObject("from" -> -1, "to"-> -1)).toList
   }
 
   def findByIdAndUserID(id: ObjectId, userId: ObjectId): Option[ExpenseReport] = {
@@ -84,9 +101,6 @@ object ExpenseReport extends ModelCompanion[ExpenseReport, ObjectId] {
     findOneById(id)
   }
 
-//  def count() = {
-//    count(MongoDBObject.empty)
-//  }
 }
 
 object ExpenseFormat {
@@ -107,16 +121,15 @@ object ExpenseFormat {
   }
 
   implicit object ExpenseReportReads extends Reads[User => ExpenseReport] {
-    def reads(json: JsValue) = {
-      user =>
-        val expenseReportId: ObjectId = (json \ "id").asOpt[String].map(new ObjectId(_)).getOrElse(new ObjectId())
-        ExpenseReport(
-          expenseReportId,
-          (json \ "startDate").as[Date],
-          (json \ "endDate").as[Date],
-          user.id,
-          (json \ "lines").as[Seq[ExpenseLine]]
-        )
+    def reads(json: JsValue) = { user =>
+      val expenseReportId: ObjectId = (json \ "id").asOpt[String].map(new ObjectId(_)).getOrElse(new ObjectId())
+      ExpenseReport(
+        expenseReportId,
+        (json \ "startDate").as[Date],
+        (json \ "endDate").as[Date],
+        user.id,
+        (json \ "lines").as[Seq[ExpenseLine]]
+      )
     }
   }
 }
@@ -134,8 +147,8 @@ object Expense {
       case "Internet" => Internet(amount)
       case "Other" => Other(amount)
     }
-
   }
+
 }
 
 @Salat

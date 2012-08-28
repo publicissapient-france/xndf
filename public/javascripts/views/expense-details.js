@@ -1,5 +1,5 @@
 define([
-    'zepto',
+    'jquery',
     'Underscore',
     'Backbone',
     'models/expense',
@@ -8,36 +8,37 @@ define([
     var serverDate=function(date){
         return date.toISOString().substr(0,10);
     } ;
+    var successesToOids=function(success){
+        return success.oid;
+    }
     var ExpenseDetailsView = Backbone.View.extend({
         events:{
             "click #put":"saveExpense",
             "click #home":"close",
+            "click #add_file":"addFile",
             "change header":"change",
             "change footer":"change",
             "click tr[name='line']":"editLine",
             "click #save_line":"saveLine",
-            "change #line_form" :"changeLine"
+            "change #line_form" :"changeLine",
+            "change #hidden-file": "saveFile"
         },
-                         /*
-                          [_.clone({
-                          expense: 0.0,
-                          description: " ",
-                          valueDate: serverDate(new Date()),
-                          expenseType: "Lodging",
-                          account: "xebia"
-                          })]
-                         * */
+        addFile:function(){
+            $('#hidden-file')[0].disabled=false;
+            $('#hidden-file').click();
+            $('#hidden-file')[0].disabled=true;
+        },
         editLine:function(event){
-            target=event.currentTarget;
-            index=target.attributes['data-id'].nodeValue;
-            this.model.currentLine=this.model.get('lines')[index];
-            this.render();
+           var target=event.currentTarget;
+           var index=target.attributes['data-id'].nodeValue;
+           this.model.currentLine=this.model.get('lines')[index];
+           this.refreshView();
         },
         changeLine:function(event){
-            target = event.target;
-            path = target.name.split('.');
+            var target = event.target;
+            var path = target.name.split('.');
             path.shift();
-            value=target.value;
+            var value=target.value;
             if(target.type=="number"){
                 value=(+target.value);
             }
@@ -45,10 +46,10 @@ define([
         },
         change:function(event){
             // Apply the change to the model
-            target = event.target;
-            path = target.name.split('.');
+            var target = event.target;
+            var path = target.name.split('.');
 
-            value=target.value;
+            var value=target.value;
             if(target.type=="number"){
                 value=(+target.value);
             }
@@ -64,22 +65,27 @@ define([
         },
         initialize:function () {
             this.slot=this.options.slot;
-            this.model.on("reset", this.render, this);
-            this.model.on("sync", this.render, this);
-            this.model.on("change", this.render, this);
+            this.model.on("reset", this.refreshView, this);
+            this.model.on("sync", this.refreshView, this);
+            this.model.on("change", this.refreshView, this);
         },
 
         renderTemplate:function (json) {
-            $expenseElement = $(_.template(template, json));
+            var $expenseElement = $(_.template(template, json));
             $expenseElement.find('[name*="line.expenseType"]')[0].value=this.model.currentLine.expenseType;
             return $expenseElement;
         },
 
-        render:function () {
-            json = this.model.toJSON();
-            json.currentLine=this.model.currentLine;
+        refreshView:function () {
+            var json = this.model.toJSON();
+            json.currentLine = this.model.currentLine;
             this.$el.html(this.renderTemplate(json));
-            this.slot.html(this.el);
+            this.delegateEvents();
+        },
+
+        render:function () {
+            this.refreshView();
+            $(this.slot).html(this.el);
             return this;
         },
 
@@ -90,12 +96,33 @@ define([
 
         saveLine:function () {
             this.model.saveCurrentLine();
-            this.render();
+            this.refreshView();
         },
 
         close:function () {
             this.$el.unbind();
             this.$el.empty();
+            this.model.unbind();
+        },
+
+        saveFile:function(){
+            var self = this;
+            var data = new FormData();
+            var file = $("#hidden-file")[0].files[0];
+            data.append('file', file);
+            $.ajax({
+                url: '/evidences',
+                type: 'POST',
+                data: data,
+                processData: false,
+                cache: false,
+                contentType: false
+            })
+                .done(function (data) {
+                    self.model.currentLine.evidences= _.union(self.model.currentLine.evidences,data.success.map(function(d){return d.oid;}));
+                })
+                .fail(function () {
+                });
         }
 
     });

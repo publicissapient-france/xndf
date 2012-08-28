@@ -1,5 +1,5 @@
 define([
-    'zepto',
+    'jquery',
     'Underscore',
     'Backbone',
     'models/expenses',
@@ -17,12 +17,12 @@ define([
             },
             initialize: function(){
                 this.bind();
-                this.refresh();
             },
 
             render: function () {
                 this.$el.html(_.template(template,{'models':this.model.toJSON()}));
-                this.slot.html(this.el);
+                this.slot.html(this.$el);
+                this.delegateEvents();
                 return this;
             },
 

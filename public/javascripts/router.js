@@ -21,13 +21,17 @@ define([
         edit_expense: function(id){
             require(['views/expense-details'],function(ExpenseDetailsView){
                 var expense = homeview.model.get(id);
-                new ExpenseDetailsView({model:expense, slot: $('#content')}).render();
+                if(!expense){
+                    expense = new Expense({id:id});
+                    expense.fetch();
+                }
+                new ExpenseDetailsView({model:expense, slot: $('#content')[0]}).render();
             });
         },
 
         new_expense: function(){
             require(['views/expense-details'],function(ExpenseDetailsView){
-                new ExpenseDetailsView({model:new Expense(), slot: $('#content')}).render();
+                new ExpenseDetailsView({model:new Expense(), slot: $('#content')[0]}).render();
             });
         }
     });
