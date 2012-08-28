@@ -21,9 +21,9 @@ import com.mongodb.casbah.gridfs.GridFSInputFile
 case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine]) {
   lazy val lines = _lines
 
-  def addLine(valueDate: Date, account: String, description: String, expense: Expense) = {
+  def addLine(valueDate: Date, account: String, description: String, expense: Expense, evidences:Seq[ObjectId]) = {
     lazy val newParent: ExpenseReport = ExpenseReport(this.id, this.from, this.to, this.userId, line +: this.lines)
-    lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense)
+    lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense,evidences)
     newParent
   }
 
@@ -39,7 +39,8 @@ case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _
 case class ExpenseLine(valueDate: Date,
                        account: String,
                        description: String,
-                       expense: Expense) {
+                       expense: Expense,
+                       evidences:Seq[ObjectId]) {
 }
 
 object Evidence {
@@ -61,7 +62,8 @@ object ExpenseLine {
         (value \ "valueDate").as[Date],
         (value \ "account").as[String],
         (value \ "description").as[String],
-        ((value \ "expenseType").as[String], (value \ "expense").as[Double])
+        ((value \ "expenseType").as[String], (value \ "expense").as[Double]),
+        (value \ "evidences").as[Seq[String]].map({new ObjectId(_)})
       )
     }
 
@@ -87,7 +89,7 @@ object ExpenseReport extends ModelCompanion[ExpenseReport, ObjectId] {
   }
 
   def findAllByUserId(userId: ObjectId): List[ExpenseReport] = {
-    find(MongoDBObject("userId"->userId)).toList
+    find(MongoDBObject("userId"->userId)).sort(MongoDBObject("from" -> -1, "to"-> -1)).toList
   }
 
   def findByIdAndUserID(id: ObjectId, userId: ObjectId): Option[ExpenseReport] = {
