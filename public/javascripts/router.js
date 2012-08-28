@@ -21,6 +21,10 @@ define([
         edit_expense: function(id){
             require(['views/expense-details'],function(ExpenseDetailsView){
                 var expense = homeview.model.get(id);
+                if(!expense){
+                    expense = new Expense({id:id});
+                    expense.fetch();
+                }
                 new ExpenseDetailsView({model:expense, slot: $('#content')[0]}).render();
             });
         },
