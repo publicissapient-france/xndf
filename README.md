@@ -1,9 +1,11 @@
 Projet X-Ndf
 ==========
-Build Status
+[Build Status](https://secure.travis-ci.org/#!/jeantil/xndf)
 ----------
-master status ![Alt text](https://secure.travis-ci.org/jeantil/xndf.png?branch=master)
-repo status ![Alt text](https://secure.travis-ci.org/jeantil/xndf.png)
+
+* master status ![Alt text](https://secure.travis-ci.org/jeantil/xndf.png?branch=master)
+* repo status ![Alt text](https://secure.travis-ci.org/jeantil/xndf.png)
+
 Roadmap
 ----------
 ### Epics de la v1.0
