@@ -11,7 +11,7 @@ Roadmap
 - (done) Upload des fichiers de justificatif (jpeg/pdf et stockage mongodb si possible)
 - (done) Intégration openid
 - (done) Création du fichier excel de note de frais sur le modèle de l'excel actuel (intégration de poi ? )
-- (in progress)Envoi par mail de l'excel et des elements de justificatif à nadia et a sara
+- (in progress) Envoi par mail de l'excel et des elements de justificatif à nadia et a sara
 
 ### Epics de la v2.0
 - (in progress) compatibilité mobile
@@ -24,7 +24,7 @@ Roadmap
 Developper sur X-NDF server
 ----------
 ### Prérequis
-Le strict minimum est d'avoir une jvm, sbt 0.11.3, un clone du projet et un éditeur de texte.
+Le strict minimum est d'avoir une jvm, sbt 0.11.3, un clone du projet, un serveur mongo et un éditeur de texte.
 Quelque soit votre mode de développement préféré il faut commencer par lancer `sbt` depuis le dossier server du workspace et mettre à jour les dépendances :
 
     $ sbt
