@@ -93,7 +93,7 @@ class ExpenseReportSpec extends Specification {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
       val userId: ObjectId = new ObjectId()
-      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq())
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),ExpenseStatus.Draft)
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
 
@@ -105,7 +105,7 @@ class ExpenseReportSpec extends Specification {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
       val userId: ObjectId = new ObjectId()
-      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq())
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),ExpenseStatus.Draft)
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
 

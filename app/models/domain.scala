@@ -18,11 +18,26 @@ import play.api.mvc.MultipartFormData.FilePart
 import play.api.libs.Files.TemporaryFile
 import com.mongodb.casbah.gridfs.GridFSInputFile
 
-case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine]) {
+
+object ExpenseStatus extends Enumeration{
+  type ExpenseStatus = Value
+  val Draft, Submitted = Value
+  implicit object ExpenseStatusJson extends Format[ExpenseStatus] {
+    def reads(value: JsValue): ExpenseStatus = {
+      Value(value.as[String])
+    }
+
+    def writes(status: ExpenseStatus) = {
+      toJson(status.toString)
+    }
+  }
+}
+import ExpenseStatus._
+case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine],status:ExpenseStatus) {
   lazy val lines = _lines
 
   def addLine(valueDate: Date, account: String, description: String, expense: Expense, evidences:Seq[ObjectId]) = {
-    lazy val newParent: ExpenseReport = ExpenseReport(this.id, this.from, this.to, this.userId, line +: this.lines)
+    lazy val newParent: ExpenseReport = ExpenseReport(this.id, this.from, this.to, this.userId, line +: this.lines, this.status)
     lazy val line: ExpenseLine = ExpenseLine(valueDate, account, description, expense,evidences)
     newParent
   }
@@ -128,7 +143,8 @@ object ExpenseFormat {
         (json \ "startDate").as[Date],
         (json \ "endDate").as[Date],
         user.id,
-        (json \ "lines").as[Seq[ExpenseLine]]
+        (json \ "lines").as[Seq[ExpenseLine]],
+        (json \ "status").as[ExpenseStatus]
       )
     }
   }
