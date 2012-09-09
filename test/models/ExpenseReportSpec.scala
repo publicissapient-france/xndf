@@ -39,10 +39,10 @@ class ExpenseReportSpec extends Specification {
         val user: User = User(new ObjectId("aaaaaaaaaaaaaaaaaaaaaaa1"), "Jane Doe", "email1", "id1")
         user.save()
         val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
-        ExpenseReport(new ObjectId("111111111111111111111111"), date, date, user.id, Seq())
+        ExpenseReport(new ObjectId("111111111111111111111111"), date, date, user.id, Seq(),Some(ExpenseStatus.SUBMITTED))
           .addLine(date, "xebia", "description", Internet(15.99),Seq())
           .addLine(date, "xebia", "description", Internet(15.99),Seq()).save
-        ExpenseReport(new ObjectId(), date, date, user.id, Seq())
+        ExpenseReport(new ObjectId(), date, date, user.id, Seq(),Some(ExpenseStatus.SUBMITTED))
           .addLine(date, "xebia", "description", Internet(15.99),Seq())
           .addLine(date, "xebia", "description", Internet(15.99),Seq()).save
         t // execute t inside a http session
@@ -54,7 +54,7 @@ class ExpenseReportSpec extends Specification {
     "be saved" in emptyApp {
       ExpenseReport.count() === 0
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
-      val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId(), Seq())
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId(), Seq(),Some(ExpenseStatus.SUBMITTED))
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
       expenseReport.save
@@ -93,7 +93,7 @@ class ExpenseReportSpec extends Specification {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
       val userId: ObjectId = new ObjectId()
-      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),ExpenseStatus.Draft)
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),Some(ExpenseStatus.DRAFT))
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
 
@@ -105,7 +105,7 @@ class ExpenseReportSpec extends Specification {
       val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
       val userId: ObjectId = new ObjectId()
-      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),ExpenseStatus.Draft)
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),Some(ExpenseStatus.DRAFT))
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
 

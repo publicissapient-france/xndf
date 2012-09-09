@@ -16,24 +16,34 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.JsNumber
 import play.api.mvc.MultipartFormData.FilePart
 import play.api.libs.Files.TemporaryFile
-import com.mongodb.casbah.gridfs.GridFSInputFile
+import com.mongodb.casbah.gridfs.{GridFSDBFile, GridFSInputFile}
+import play.api.Logger
+import io.Source
 
 
-object ExpenseStatus extends Enumeration{
-  type ExpenseStatus = Value
-  val Draft, Submitted = Value
-  implicit object ExpenseStatusJson extends Format[ExpenseStatus] {
-    def reads(value: JsValue): ExpenseStatus = {
-      Value(value.as[String])
+@Salat
+sealed trait ExpenseStatusValues
+case class Draft() extends ExpenseStatusValues
+case class Submitted() extends ExpenseStatusValues
+
+object ExpenseStatus {
+  lazy val DRAFT:ExpenseStatusValues=Draft()
+  lazy val SUBMITTED:ExpenseStatusValues=Submitted()
+  implicit object ExpenseStatusJson extends Format[ExpenseStatusValues] {
+    def reads(value: JsValue): ExpenseStatusValues = {
+      value.as[String] match {
+        case "Draft()" => Draft()
+        case "Submitted()" => Submitted()
+      }
     }
 
-    def writes(status: ExpenseStatus) = {
+    def writes(status: ExpenseStatusValues) = {
       toJson(status.toString)
     }
   }
 }
 import ExpenseStatus._
-case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine],status:ExpenseStatus) {
+case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine],status:Option[ExpenseStatusValues]) {
   lazy val lines = _lines
 
   def addLine(valueDate: Date, account: String, description: String, expense: Expense, evidences:Seq[ObjectId]) = {
@@ -66,6 +76,13 @@ object Evidence {
     part.contentType.map(contentType => newFile.contentType = contentType)
     newFile.save()
     newFile._id
+  }
+  def findById(id:ObjectId): FilePart[Array[Byte]] ={
+    val file: GridFSDBFile = gridFS("default").find(id)
+    Logger.info(file.filename.toString +" "+file.size)
+    Source.fromInputStream(file.inputStream)
+
+    FilePart(file.filename.getOrElse("file"), file.filename.getOrElse(""),file.contentType,file.source.map(_.toByte).toArray)
   }
 }
 
@@ -129,7 +146,8 @@ object ExpenseFormat {
           "startDate" -> toJson(report.from),
           "endDate" -> toJson(report.to),
           "total" -> toJson(report.total),
-          "lines" -> toJson(report.lines)
+          "lines" -> toJson(report.lines) ,
+          "status" -> toJson(report.status)
         )
       )
     }
@@ -144,7 +162,7 @@ object ExpenseFormat {
         (json \ "endDate").as[Date],
         user.id,
         (json \ "lines").as[Seq[ExpenseLine]],
-        (json \ "status").as[ExpenseStatus]
+        (json \ "status").asOpt[ExpenseStatusValues].orElse(Some(ExpenseStatus.DRAFT))
       )
     }
   }
