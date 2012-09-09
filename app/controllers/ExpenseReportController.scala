@@ -78,7 +78,7 @@ object ExpenseReportController extends Controller with Secured {
     val email:Email=Email(subject="Note de frais",
           from=EmailAddress(user.name,user.email),
           replyTo=None,
-          recipients=Seq(Recipient(Message.RecipientType.TO ,EmailAddress("","jhelou@xebia.fr"))),
+          recipients=Seq(Recipient(Message.RecipientType.TO ,EmailAddress(user.name,user.email))),
           text="Bonjour, ma note de frais et ses justificatifs ci-joints...",
           htmlText="Bonjour, ma note de frais et ses justificatifs ci-joints...",
           attachments=Seq(report)
