@@ -1,5 +1,7 @@
 package libs {
 
+import java.io.ByteArrayOutputStream
+
 class ExcelGenerator {
 
   import java.io.File
@@ -65,6 +67,11 @@ class ExcelGenerator {
     val fileOut = new FileOutputStream(file)
     workBook.write(fileOut)
     fileOut.close()
+  }
+  def asByteArray()={
+    val outputStream = new ByteArrayOutputStream()
+    workBook.write(outputStream)
+    outputStream.toByteArray
   }
 }
 
