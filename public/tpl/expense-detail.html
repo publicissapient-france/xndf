@@ -28,7 +28,7 @@
                         <option value="Gas">Gas</option>
                         <option value="Other">Misc.</option>
                     </select>
-                    <input type="text" name="line.description" placeholder="Description" class="span3" autofocus="" value="<%= currentLine.description%>">
+                    <input type="text" name="line.description" class="span3" autofocus="" value="<%= currentLine.description%>">
                     <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
                     <input type="date" name="line.valueDate" data-datepicker="datepicker"  class="span2" value="<%=currentLine.valueDate%>">
                     <div style="height: 0px;width:0px;overflow:hidden;display:inline-block;"><input id="hidden-file" name="line.evidence" value="currentLine.evidence" type="file" disabled="true"></div>
