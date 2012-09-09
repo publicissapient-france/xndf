@@ -14,6 +14,7 @@ define([
     var ExpenseDetailsView = Backbone.View.extend({
         events:{
             "click #put":"saveExpense",
+            "click #send":"sendExpense",
             "click #home":"close",
             "click #add_file":"addFile",
             "change header":"change",
@@ -89,7 +90,13 @@ define([
             return this;
         },
 
+        sendExpense:function () {
+            this.model.set({status:"Submitted()"});
+            this.model.save();
+            return false;
+        },
         saveExpense:function () {
+            this.model.set({status:"Draft()"});
             this.model.save();
             return false;
         },
