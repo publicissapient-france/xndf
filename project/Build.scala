@@ -20,8 +20,8 @@ object ApplicationBuild extends Build {
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     resolvers ++= Seq(
-      "sonatype release" at "https://oss.sonatype.org/content/repositories/releases",
-      "OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/",
+      "sonatype release" at "http://oss.sonatype.org/content/repositories/releases",
+      "OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
       "Rhinofly Internal Release Repository" at "http://maven-repository.rhinofly.net:8081/artifactory/libs-release-local"),
     // Add your own project settings here
     routesImport += "se.radley.plugin.salat.Binders._",
