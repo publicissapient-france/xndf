@@ -19,6 +19,7 @@ import play.api.libs.Files.TemporaryFile
 import com.mongodb.casbah.gridfs.{GridFSDBFile, GridFSInputFile}
 import play.api.Logger
 import io.Source
+import java.io.{ByteArrayOutputStream, ByteArrayInputStream}
 
 
 @Salat
@@ -80,9 +81,9 @@ object Evidence {
   def findById(id:ObjectId): FilePart[Array[Byte]] ={
     val file: GridFSDBFile = gridFS("default").find(id)
     Logger.info(file.filename.toString +" "+file.size)
-    Source.fromInputStream(file.inputStream)
-
-    FilePart(file.filename.getOrElse("file"), file.filename.getOrElse(""),file.contentType,file.source.map(_.toByte).toArray)
+    val byteStream = new ByteArrayOutputStream()
+    file.writeTo(byteStream)
+    FilePart(file.filename.getOrElse("file"), file.filename.getOrElse(""),file.contentType,byteStream.toByteArray)
   }
 }
 

@@ -71,9 +71,9 @@ object ExpenseReportController extends Controller with Secured {
       Attachment(filePart.filename, filePart.ref,filePart.contentType.getOrElse("application/octet-stream"),Disposition.Attachment)
     }
 //    impossible de relire les fichiers ecrits dans mongo pour l'instant !!
-//    val files: Seq[Attachment] = expenseReport.lines.flatMap({
-//      line => line.evidences.map(Evidence.findById(_))
-//    }).map(filepart2Attachment(_))
+    val files: Seq[Attachment] = expenseReport.lines.flatMap({
+      line => line.evidences.map(Evidence.findById(_))
+    }).map(filepart2Attachment(_))
     val report=Attachment("report.xls", new ExcelGenerator().generate(user,expenseReport).asByteArray(),"application/excel")
     val email:Email=Email(subject="Note de frais",
           from=EmailAddress(user.name,user.email),
@@ -81,7 +81,7 @@ object ExpenseReportController extends Controller with Secured {
           recipients=Seq(Recipient(Message.RecipientType.TO ,EmailAddress(user.name,user.email))),
           text="Bonjour, ma note de frais et ses justificatifs ci-joints...",
           htmlText="Bonjour, ma note de frais et ses justificatifs ci-joints...",
-          attachments=Seq(report)
+          attachments=Seq(report) ++ files
     )
     Ses.sendEmail(email = email)
     Logger.info("sent email:\n"+email)
