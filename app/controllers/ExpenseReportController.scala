@@ -60,13 +60,15 @@ object ExpenseReportController extends Controller with Secured {
           val toExpenseReport = jsReport.as[User => ExpenseReport]
           val expenseReport = toExpenseReport(user)
           expenseReport.save()
-          expenseReport.status.map( _ match { case ExpenseStatus.SUBMITTED=> emailXebia (expenseReport,user); case _ => Unit })
-          Ok (toJson(expenseReport))
+          expenseReport.status  match {
+            case Some(ExpenseStatus.SUBMITTED)=> emailXebia(expenseReport,user)(request)
+            case _ => Ok (toJson(expenseReport))
+          }
       }.getOrElse(
         Redirect(routes.Application.login())
       )
   }
-  def emailXebia(expenseReport:ExpenseReport,user:User){
+  def emailXebia(expenseReport:ExpenseReport,user:User)(implicit request:Request[Any]):Result={
     implicit def filepart2Attachment(filePart:FilePart[Array[Byte]])={
       Attachment(filePart.filename, filePart.ref,filePart.contentType.getOrElse("application/octet-stream"),Disposition.Attachment)
     }
@@ -84,6 +86,6 @@ object ExpenseReportController extends Controller with Secured {
           attachments=Seq(report) ++ files
     )
     Ses.sendEmail(email = email)
-    Logger.info("sent email:\n"+email)
+    Ok(toJson(expenseReport)).flashing("Success"->"Email sent")
   }
 }

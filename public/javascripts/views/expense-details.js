@@ -11,6 +11,15 @@ define([
     var successesToOids=function(success){
         return success.oid;
     }
+
+    var flashError=function(model, response){
+        $("#flash").html("<p>Error</p>").addClass("error").delay(2500).slideUp(250)
+    }
+
+    var flashSuccess=function(model, response){
+        $("#flash").html("<p>Success</p>").addClass("success").delay(2500).slideUp(250)
+    }
+
     var ExpenseDetailsView = Backbone.View.extend({
         events:{
             "click #put":"saveExpense",
@@ -92,12 +101,20 @@ define([
 
         sendExpense:function () {
             this.model.set({status:"Submitted()"});
-            this.model.save();
+            $("#flash").html("<p>Working...</p>").removeClass("error").removeClass("success").slideDown(250)
+            this.model.save({},{
+                error:flashError,
+                success:flashSuccess
+            });
             return false;
         },
         saveExpense:function () {
             this.model.set({status:"Draft()"});
-            this.model.save();
+            $("#flash").html("<p>Working...</p>").removeClass("error").removeClass("success").slideDown(250)
+            this.model.save({},{
+                error:flashError,
+                success:flashSuccess
+            });
             return false;
         },
 
