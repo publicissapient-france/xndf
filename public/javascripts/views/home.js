@@ -13,7 +13,7 @@ define([
 
             },
             navigate_row: function (event){
-                $(event.currentTarget).find('a')[0].click();
+                $(event.currentTarget).find('a').click();
             },
             initialize: function(){
                 this.bind();
@@ -31,9 +31,7 @@ define([
             },
 
             bind: function(){
-                this.model.on('reset',this.render,this);
-                this.model.on('add', this.render,this);
-                this.model.on('remove',this.render, this);
+                this.model.on('reset add remove',this.render,this);
             }
         });
 
