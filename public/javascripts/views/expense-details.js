@@ -5,12 +5,6 @@ define([
     'models/expense',
     'text!../../tpl/expense-detail.html'
 ], function ($, _, Backbone, Expense, template) {
-    var serverDate=function(date){
-        return date.toISOString().substr(0,10);
-    } ;
-    var successesToOids=function(success){
-        return success.oid;
-    }
 
     var flashError=function(model, response){
         $("#flash").html("<p>Error</p>").addClass("error").delay(2500).slideUp(250)
@@ -75,9 +69,7 @@ define([
         },
         initialize:function () {
             this.slot=this.options.slot;
-            this.model.on("reset", this.refreshView, this);
-            this.model.on("sync", this.refreshView, this);
-            this.model.on("change", this.refreshView, this);
+            this.model.on("reset sync change", this.refreshView, this);
         },
 
         renderTemplate:function (json) {
@@ -101,7 +93,7 @@ define([
 
         sendExpense:function () {
             this.model.set({status:"Submitted()"});
-            $("#flash").html("<p>Working...</p>").removeClass("error").removeClass("success").slideDown(250)
+            $("#flash").html("<p>Working...</p>").removeClass("success error").slideDown(250)
             this.model.save({},{
                 error:flashError,
                 success:flashSuccess
@@ -110,7 +102,7 @@ define([
         },
         saveExpense:function () {
             this.model.set({status:"Draft()"});
-            $("#flash").html("<p>Working...</p>").removeClass("error").removeClass("success").slideDown(250)
+            $("#flash").html("<p>Working...</p>").removeClass("success error").slideDown(250)
             this.model.save({},{
                 error:flashError,
                 success:flashSuccess
