@@ -65,6 +65,7 @@ class ExcelGenerator {
   def writeFile(path: String) {
     val file = new File(path)
     val fileOut = new FileOutputStream(file)
+    workBook.setForceFormulaRecalculation(true);
     workBook.write(fileOut)
     fileOut.close()
   }
