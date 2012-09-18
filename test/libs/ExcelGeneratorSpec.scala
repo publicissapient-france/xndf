@@ -16,9 +16,9 @@ class ExcelGeneratorSpec extends Specification {
       val date = DATE_FORMATTER.parse("2012-05-17T00:04:00+0200")
       val from = DATE_FORMATTER.parse("2012-05-01T00:04:00+0200")
       val to = DATE_FORMATTER.parse("2012-05-31T00:04:00+0200")
-      val user = User(new ObjectId("222222222222222222222222"), "username", "email", "verifiedid")
+      val user = User(new ObjectId("222222222222222222222222"), "Mickey Mouse", "Mickey@mouse.com", "verifiedid")
       val expense = ExpenseReport(new ObjectId("111111111111111111111111"), date, date, user.id, Seq(),Some(ExpenseStatus.DRAFT))
-      .addLine(date, "xebia", "description", Internet(15.99),Seq())
+      .addLine(date, "xebia", "Entrée Disneyland Paris!", Internet(1599.95),Seq())
       new ExcelGenerator().generate(user,expense).writeFile("ok.xls")
       0 === 0
     }
