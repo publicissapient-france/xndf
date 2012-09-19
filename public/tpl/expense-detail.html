@@ -10,12 +10,19 @@
     <table class="table table-striped">
         <tbody>
             <% _.each(lines,function(line,index){ %>
-            <tr name="line" data-id="<%=index%>">
+            <tr class="line" name="line" data-id="<%=index%>">
                 <td><%=line.expenseType%></td>
                 <td><%=line.description%></td>
                 <td><%=line.valueDate%></td>
                 <td><%=line.expense%>€</td>
-                <td><% if(line.evidences && line.evidences.length>0){%><i class="icon-file"></i> <%}%></td>
+                <td>
+                    <% if(line.evidences && line.evidences.length>0){%>
+                        <i class="icon-file"></i>
+                    <%}%>
+                    <a class="delete-line btn pull-right">
+                        <i class="icon-ban-circle"></i>
+                    </a>
+                </td>
             </tr>
             <% }); %>
             <tr id="line_form">
