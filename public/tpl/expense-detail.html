@@ -10,12 +10,19 @@
     <table class="table table-striped">
         <tbody>
             <% _.each(lines,function(line,index){ %>
-            <tr name="line" data-id="<%=index%>">
+            <tr class="line" name="line" data-id="<%=index%>">
                 <td><%=line.expenseType%></td>
                 <td><%=line.description%></td>
                 <td><%=line.valueDate%></td>
                 <td><%=line.expense%>€</td>
-                <td><% if(line.evidences && line.evidences.length>0){%><i class="icon-file"></i> <%}%></td>
+                <td>
+                    <% if(line.evidences && line.evidences.length>0){%>
+                        <i class="icon-file"></i>
+                    <%}%>
+                    <a class="delete-line btn pull-right">
+                        <i class="icon-remove-sign"></i>
+                    </a>
+                </td>
             </tr>
             <% }); %>
             <tr id="line_form">
@@ -43,6 +50,6 @@
     <footer class="input-append">
         <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
         <input class="total" type="text" name="sum" value="<%=total%>" disabled="true"><span class="add-on">€</span>
-        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>save</a><a id="send" class="btn"><i class="icon-play"></i>send to Nadia</a></span>
+        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>save</a><a id="send" class="btn"><i class="icon-play"></i>Send to Nadia</a></span>
     </footer>
 </form>

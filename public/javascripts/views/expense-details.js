@@ -25,7 +25,8 @@ define([
             "click tr[name='line']":"editLine",
             "click #save_line":"saveLine",
             "change #line_form" :"changeLine",
-            "change #hidden-file": "saveFile"
+            "change #hidden-file": "saveFile",
+            "click a.delete-line" : "deleteLine"
         },
         addFile:function(){
             $('#hidden-file')[0].disabled=false;
@@ -33,11 +34,23 @@ define([
             $('#hidden-file')[0].disabled=true;
         },
         editLine:function(event){
-           var target=event.currentTarget;
-           var index=target.attributes['data-id'].nodeValue;
+           var target=$(event.currentTarget);
+           var index=target.attr('data-id');
            this.model.currentLine=this.model.get('lines')[index];
            this.refreshView();
         },
+
+        deleteLine : function(event) {
+            var target = $(event.currentTarget);
+            var row = target.parents("tr.line");
+            var index = row.attr("data-id");
+            var remainings = _.reject(this.model.get("lines"), function(line, i) {
+                return i==index;
+            });
+            this.model.set("lines", remainings);
+            event.stopPropagation();
+        },
+
         changeLine:function(event){
             var target = event.target;
             var path = target.name.split('.');
