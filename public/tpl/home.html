@@ -1,6 +1,12 @@
 <header>
-        <h3 style="display: inline;"><i class="icon-list icon-white" style="margin-top:3px"></i> Expenses</h3>
-        <a id="new" class="btn pull-right" href="#expense/new"><i class="icon-pencil"></i> New Expense</a>
+        <h3 style="display: inline;">
+            <i class="icon-list icon-white" style="margin-top:3px"></i>
+            <%= i18n.t("home.expenses") %>
+        </h3>
+        <a id="new" class="btn pull-right" href="#expense/new">
+            <i class="icon-pencil"></i>
+            <%= i18n.t("home.new_expense") %>
+        </a>
 </header>
 <table class="table table-striped">
     <% _.each(models, function(expense) { %>
@@ -19,5 +25,8 @@
     <% });%>
 </table>
 <footer>
-    <a id="get" class="btn btn-inverse pull-right"><i class="icon-repeat icon-white"></i> Reload</a>
+    <a id="get" class="btn btn-inverse pull-right">
+        <i class="icon-repeat icon-white"></i>
+        <%= i18n.t("home.reload") %>
+    </a>
 </footer>
