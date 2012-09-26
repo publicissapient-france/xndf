@@ -4,13 +4,20 @@
 </header>
 <table class="table table-striped">
     <% _.each(models, function(expense) { %>
-    <tr>
-        <td><a href="#expense/<%=expense.id%>"><%= expense.startDate %> <i class="icon-play"></i> <%= expense.endDate  %></a></td>
-        <td class="total"><%= expense.total %></td>
-    </tr>
+        <tr>
+            <td>
+                <a href="#expense/<%=expense.id%>">
+                    <%= expense.startDate %>
+                    <i class="icon-play"></i>
+                    <%= expense.endDate  %>
+                </a>
+            </td>
+            <td class="total">
+                <%= expense.total %> &euro;
+            </td>
+        </tr>
     <% });%>
 </table>
 <footer>
-    <a id="delete" class="btn btn-danger"><i class="icon-fire icon-white"></i> Delete</a>
     <a id="get" class="btn btn-inverse pull-right"><i class="icon-repeat icon-white"></i> Reload</a>
 </footer>
