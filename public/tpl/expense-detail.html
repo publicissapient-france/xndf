@@ -1,9 +1,9 @@
     <header id="flash" class="flash"></header>
     <header>
-        <h4><i class="icon-plus icon-white"></i><b>Note de frais</b></h4>
+        <i class="icon-plus icon-white"></i><b><%= i18n.t("details.expense")%></b></div>
         <span>
-            Du <input class="input-small" type="date" name="startDate" value="<%= startDate %>">
-            au <input class="input-small" type="date" name="endDate" value="<%= endDate %>">
+            <%= i18n.t("details.since") %> <input class="datepicker" type="date" name="startDate" value="<%= startDate %>">
+            <%= i18n.t("details.to") %> <input class="datepicker" type="date" name="endDate" value="<%= endDate %>">
         </span>
     </header>
     <table class="table table-striped">
@@ -32,13 +32,10 @@
             <form class="form input-append" id="line_form">
                 <label>Type</label>
                 <select name="line.expenseType" class="span3">
-                    <option value="Lodging" >Logement</option>
-                    <option value="Phone">Téléphone</option>
-                    <option value="Internet">Internet</option>
-                    <option value="Transportation">Transport</option>
-                    <option value="Meal">Repas</option>
-                    <option value="Gas">Essence</option>
-                    <option value="Other">Divers</option>
+                    <% var types = ["Lodging", "Phone", "Internet", "Transportation", "Meal", "Gas", "Other" ];
+                    _.each(types, function(type, index) { %>
+                    <option value="<%= type %>"><%= i18n.t("expense.type." + type) %></option>
+                    <% }); %>
                 </select>
                 <label>Description</label>
                 <input type="text" name="line.description"  autofocus="" value="<%= currentLine.description%>">
@@ -59,8 +56,9 @@
         </div>
     </div>
     <footer class="input-append">
-        <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
+        <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i><%= i18n.t("common.back") %></a>
         <input class="total" type="text" name="sum" value="<%=total%>" disabled="true"><span class="add-on">€</span>
-        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>Enreg</a><a id="send" class="btn"><i class="icon-play"></i>Envoi</a></span>
+        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i><%= i18n.t("common.save") %></a>
+        <a id="send" class="btn"><i class="icon-play"></i><%= i18n.t("details.send") %></a></span>
     </footer>
     <div style="height: 0px;width:0px;overflow:hidden;display:inline-block;"><input id="hidden-file" name="line.evidence" value="currentLine.evidence" type="file" disabled="true"></div>
