@@ -34,6 +34,5 @@ define([
                 this.model.on('reset add remove',this.render,this);
             }
         });
-
         return new HomeView({model:new Expenses()});
     });
