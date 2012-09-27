@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import play.api.libs.json._
 import play.api.libs.json.Json._
-import anorm.{NotAssigned, Id, Pk}
 
 package object json {
   val ISO_8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -21,24 +20,6 @@ package object json {
         case JsString(dateString) => DATE_FORMATTER.parse(dateString)
         case JsUndefined(error) => throw new RuntimeException("iso8601-formated (yyyy-MM-dd'T'HH:mm:ssZ) string expected, was JsUndefined : " + error)
         case _ => throw new RuntimeException("iso8601-formated (yyyy-MM-dd'T'HH:mm:ssZ) string expected, was " + json)
-      }
-    }
-  }
-
-  implicit object PkReads extends Reads[Pk[Long]] {
-    def reads(json: JsValue) = {
-      json match {
-        case JsNumber(l) => Id(l.longValue())
-        case _ => NotAssigned
-      }
-    }
-  }
-
-  implicit object PkWrites extends Writes[Pk[Long]] {
-    def writes(pk: Pk[Long]): JsValue = {
-      pk match {
-        case Id(l) => toJson(l)
-        case _ => JsUndefined("nil")
       }
     }
   }
