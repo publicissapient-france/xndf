@@ -1,10 +1,9 @@
-<form name="exp" id="expense-details-form">
     <header id="flash" class="flash"></header>
     <header>
-        <i class="icon-plus icon-white"></i><b>Note de frais</b></div>
+        <h4><i class="icon-plus icon-white"></i><b>Note de frais</b></h4>
         <span>
-            Du <input class="datepicker" type="date" name="startDate" value="<%= startDate %>">
-            au <input class="datepicker" type="date" name="endDate" value="<%= endDate %>">
+            Du <input class="input-small" type="date" name="startDate" value="<%= startDate %>">
+            au <input class="input-small" type="date" name="endDate" value="<%= endDate %>">
         </span>
     </header>
     <table class="table table-striped">
@@ -12,44 +11,54 @@
             <% _.each(lines,function(line,index){ %>
             <tr class="line" name="line" data-id="<%=index%>">
                 <td><%=line.expenseType%></td>
-                <td><%=line.description%></td>
                 <td><%=line.valueDate%></td>
                 <td><%=line.expense%>€</td>
                 <td>
                     <% if(line.evidences && line.evidences.length>0){%>
                         <i class="icon-file"></i>
                     <%}%>
-                    <a class="delete-line btn pull-right">
+                </td>
+                <td>
+                    <a class="delete-line">
                         <i class="icon-remove-sign"></i>
                     </a>
                 </td>
             </tr>
             <% }); %>
-            <tr id="line_form">
-                <td id="expense-line" colspan="5" class="input-append">
-                    <select name="line.expenseType" class="span2">
-                        <option value="Lodging" >Lodging</option>
-                        <option value="Phone">Phone</option>
-                        <option value="Internet">Internet</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Meal">Meal</option>
-                        <option value="Gas">Gas</option>
-                        <option value="Other">Misc.</option>
-                    </select>
-                    <input type="text" name="line.description" class="span3" autofocus="" value="<%= currentLine.description%>">
-                    <!-- change that to http://updates.html5rocks.com/2012/04/datalist-landed-in-Chrome-Canary -->
-                    <input type="date" name="line.valueDate" data-datepicker="datepicker"  class="span2" value="<%=currentLine.valueDate%>">
-                    <div style="height: 0px;width:0px;overflow:hidden;display:inline-block;"><input id="hidden-file" name="line.evidence" value="currentLine.evidence" type="file" disabled="true"></div>
-                    <input type="number" name="line.expense" class="span2" value="<%=currentLine.expense%>"><span class="add-on">€</span>
-                    <a id="add_file" class="btn"><i class="icon-file"></i></a>
-                    <a id="save_line" class="btn pull-right"><i class="icon-ok"></i></a>
-                </td>
-            </tr>
         </tbody>
     </table>
+    <div class="row" id="exp-line" >
+        <div class="span4">
+            <form class="form input-append">
+                <label>Type</label>
+                <select name="line.expenseType" class="span3">
+                    <option value="Lodging" >Lodging</option>
+                    <option value="Phone">Phone</option>
+                    <option value="Internet">Internet</option>
+                    <option value="Transportation">Transportation</option>
+                    <option value="Meal">Meal</option>
+                    <option value="Gas">Gas</option>
+                    <option value="Other">Misc.</option>
+                </select>
+                <label>Description</label>
+                <input type="text" name="line.description"  autofocus="" value="<%= currentLine.description%>">
+                <label>Date</label>
+                <input type="date" name="line.valueDate" data-datepicker="datepicker" value="<%=currentLine.valueDate%>">
+                <label>Montant</label>
+                <input type="number" name="line.expense" value="<%=currentLine.expense%>"><span class="add-on">€</span>
+                <div class="pascolle">
+                <a id="add_file" class="btn"><i class="icon-file"></i> Files</a>
+                <a id="save_line" class="btn"><i class="icon-ok"></i> Ok</a>
+                </div>
+            </form>
+        </div>
+        <div class="span5">
+
+        </div>
+    </div>
     <footer class="input-append">
         <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
         <input class="total" type="text" name="sum" value="<%=total%>" disabled="true"><span class="add-on">€</span>
-        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>save</a><a id="send" class="btn"><i class="icon-play"></i>Send to Nadia</a></span>
+        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>save</a><a id="send" class="btn"><i class="icon-play"></i> Send</a></span>
     </footer>
-</form>
+    <div style="height: 0px;width:0px;overflow:hidden;display:inline-block;"><input id="hidden-file" name="line.evidence" value="currentLine.evidence" type="file" disabled="true"></div>

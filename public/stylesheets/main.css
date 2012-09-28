@@ -14,30 +14,40 @@ header#flash.success {
 header#flash.error {
     background-color: #a71500;
 }
+#exp-line{
+    margin: 0px;
+    padding-bottom: 10px;
+    padding-left: 8px;
+    background-color: #F9F9F9;
+}
 
 td.total, input.total {
     color: #414141;
     text-align: right;
-    padding-right: 20px;
     font-weight: bold;
     width: 60px;
     margin-bottom: 0px;
 }
-.table {
+
+table.table {
     margin-bottom: 0px;
+    border-bottom: solid 1px #DDDDDD;
 }
 
+div.pascolle{
+    padding-top: 10px;
+}
 .container {
     width: 100%;
 }
 
-input[type="date"]{
-    width: 120px;
-    margin-bottom: 0px;
-}
-
 footer .add-on{
     color: #000000;
+}
+@media (max-width: 360px) {
+    .container {
+        width: 360px;
+    }
 }
 @media (min-width: 768px) {
     .container {
