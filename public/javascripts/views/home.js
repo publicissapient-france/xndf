@@ -13,7 +13,8 @@ define([
 
             },
             navigate_row: function (event){
-                $(event.currentTarget).find('a').click();
+                var href = $(event.currentTarget).find('a').attr("href");
+                app_router.navigate(href, {trigger:true})
             },
             initialize: function(){
                 this.bind();
