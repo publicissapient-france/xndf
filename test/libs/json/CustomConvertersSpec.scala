@@ -4,7 +4,6 @@ import org.specs2.mutable.Specification
 
 import play.api.libs.json.Json._
 import java.util.Date
-import anorm.{Id, NotAssigned, Pk}
 
 class CustomConvertersSpec extends Specification {
 
@@ -16,20 +15,5 @@ class CustomConvertersSpec extends Specification {
       val readDate = toJson(date).as[Date]
       readDate === date
     }
-  }
-
-  "implicit conversion for Pk[Long]" should {
-    "convert NotAssigned to and from json " in {
-      val id: Pk[Long] = NotAssigned
-      val readId = toJson(id).as[Pk[Long]]
-      readId === id
-    }
-
-    "convert Id(1) to and from json" in {
-      val id: Pk[Long] = Id(1)
-      val readId = toJson(id).as[Pk[Long]]
-      readId === id
-    }
-  }
-
+  }  
 }

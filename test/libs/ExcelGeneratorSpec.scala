@@ -1,6 +1,7 @@
 package libs {
 
 import org.specs2.mutable.Specification
+import org.apache.poi.hssf.usermodel._
 
 class ExcelGeneratorSpec extends Specification {
   "ExcelGenerator" should {
@@ -19,10 +20,17 @@ class ExcelGeneratorSpec extends Specification {
       val user = User(new ObjectId("222222222222222222222222"), "Mickey Mouse", "Mickey@mouse.com", "verifiedid")
       val expense = ExpenseReport(new ObjectId("111111111111111111111111"), date, date, user.id, Seq(),Some(ExpenseStatus.DRAFT))
       .addLine(date, "xebia", "Entrée Disneyland Paris!", Internet(1599.95),Seq())
-      new ExcelGenerator().generate(user,expense).writeFile("ok.xls")
-      0 === 0
+      .addLine(date, "xebia", "Entrée Parc Asterix Paris!", Phone(5099.95),Seq())
+      val generator=new ExcelGenerator()
+      val workbook: HSSFWorkbook=generator.generate(user,expense).workBook;
+      val sheet: HSSFSheet = workbook.getSheet("Note de frais")
+      generator.writeFile("ok.xls")
+      sheet.getRow(17).getCell(6).getStringCellValue === "Entrée Disneyland Paris!"
+      sheet.getRow(17).getCell(12).getNumericCellValue === 1599.95
+      sheet.getRow(18).getCell(6).getStringCellValue === "Entrée Parc Asterix Paris!"
+      sheet.getRow(18).getCell(11).getNumericCellValue === 5099.95
+
     }
   }
 }
-
 }
