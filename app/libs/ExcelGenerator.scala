@@ -20,11 +20,11 @@ class ExcelGenerator {
       def loop(h: Int): Stream[Int] = h #:: loop(h + 1)
       loop(1)
     }
-    expenseReport.lines.zip(indexes).foldRight(sheet)(lineToRow(_, _))
+    expenseReport.lines.zip(indexes).foldLeft(sheet)(lineToRow(_, _))
     this
   }
 
-  def lineToRow(lineWithIndex: (ExpenseLine, Int), sheet: HSSFSheet) = {
+  def lineToRow(sheet: HSSFSheet,lineWithIndex: (ExpenseLine, Int)) = {
     val index = lineWithIndex._2
     val line = lineWithIndex._1
     val templateRow = sheet.getRow(ExcelGenerator.TEMPLATE_ROW_AT)
@@ -48,6 +48,7 @@ class ExcelGenerator {
   }
 
   def createRow(sheet: HSSFSheet, templateRow: HSSFRow): HSSFRow = {
+    sheet.shiftRows(ExcelGenerator.INSERT_ROW_AT,sheet.getLastRowNum(), 1, true, false)
     val row: HSSFRow = sheet.createRow(ExcelGenerator.INSERT_ROW_AT)
     (0 until 17).map({
       col =>
