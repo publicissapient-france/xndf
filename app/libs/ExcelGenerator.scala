@@ -48,7 +48,7 @@ class ExcelGenerator {
   }
 
   def createRow(sheet: HSSFSheet, templateRow: HSSFRow): HSSFRow = {
-    sheet.shiftRows(ExcelGenerator.INSERT_ROW_AT,sheet.getLastRowNum(), 1, true, false)
+    sheet.shiftRows(ExcelGenerator.INSERT_ROW_AT,sheet.getLastRowNum, 1, true, false)
     val row: HSSFRow = sheet.createRow(ExcelGenerator.INSERT_ROW_AT)
     (0 until 17).map({
       col =>
