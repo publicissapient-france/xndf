@@ -31,7 +31,7 @@ class ExcelGenerator {
     val row: HSSFRow = createRow(sheet, templateRow)
     row.getCell(3).setCellValue(line.valueDate)
     row.getCell(4).setCellValue(index)
-    row.getCell(5).setCellValue("XEBIA")
+    row.getCell(5).setCellValue(line.account)
     row.getCell(6).setCellValue(line.description)
     val cell: HSSFCell = line.expense match {
       case Lodging(amount) => row.getCell(7)

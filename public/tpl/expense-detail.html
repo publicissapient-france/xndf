@@ -32,13 +32,13 @@
             <form class="form input-append" id="line_form">
                 <label>Type</label>
                 <select name="line.expenseType" class="span3">
-                    <option value="Lodging" >Lodging</option>
-                    <option value="Phone">Phone</option>
+                    <option value="Lodging" >Logement</option>
+                    <option value="Phone">Téléphone</option>
                     <option value="Internet">Internet</option>
-                    <option value="Transportation">Transportation</option>
-                    <option value="Meal">Meal</option>
-                    <option value="Gas">Gas</option>
-                    <option value="Other">Misc.</option>
+                    <option value="Transportation">Transport</option>
+                    <option value="Meal">Repas</option>
+                    <option value="Gas">Essence</option>
+                    <option value="Other">Divers</option>
                 </select>
                 <label>Description</label>
                 <input type="text" name="line.description"  autofocus="" value="<%= currentLine.description%>">
@@ -46,8 +46,10 @@
                 <input type="date" name="line.valueDate" data-datepicker="datepicker" value="<%=currentLine.valueDate%>">
                 <label>Montant</label>
                 <input type="number" name="line.expense" value="<%=currentLine.expense%>"><span class="add-on">€</span>
+                <label>Refactur&eacute; &agrave;</label>
+                <input type="text" name="line.account"  autofocus="" value="<%= currentLine.account %>">
                 <div class="pascolle">
-                <a id="add_file" class="btn"><i class="icon-file"></i> Files</a>
+                <a id="add_file" class="btn"><i class="icon-file"></i> Fichiers</a>
                 <a id="save_line" class="btn"><i class="icon-ok"></i> Ok</a>
                 </div>
             </form>
@@ -59,6 +61,6 @@
     <footer class="input-append">
         <a id="home" class="btn btn-inverse" href="#"><i class="icon-chevron-left icon-white"></i> Back</a>
         <input class="total" type="text" name="sum" value="<%=total%>" disabled="true"><span class="add-on">€</span>
-        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>save</a><a id="send" class="btn"><i class="icon-play"></i> Send</a></span>
+        <span class="pull-right"><a id="put" class="btn"><i class="icon-pause"></i>Enreg</a><a id="send" class="btn"><i class="icon-play"></i>Envoi</a></span>
     </footer>
     <div style="height: 0px;width:0px;overflow:hidden;display:inline-block;"><input id="hidden-file" name="line.evidence" value="currentLine.evidence" type="file" disabled="true"></div>
