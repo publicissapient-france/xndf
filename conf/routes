@@ -9,7 +9,7 @@ GET     /users                      controllers.UserController.index
 GET     /expenses                   controllers.ExpenseReportController.index
 GET     /expenses/:id               controllers.ExpenseReportController.show(id:String)
 POST    /expenses                   controllers.ExpenseReportController.create
-PUT     /expenses/:id               controllers.ExpenseReportController.update(id:String)
+PUT     /expenses/:id               controllers.ExpenseReportController.update(id:Option[String])
 
 POST    /evidences                  controllers.EvidenceController.create
 # Authentication

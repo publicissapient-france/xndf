@@ -39,20 +39,9 @@ object ExpenseReportController extends Controller with Secured {
       result.getOrElse(BadRequest("fail"))
   }
 
-  def create = IsAuthenticated(parse.json) {
-    userId => implicit request =>
-      val jsReport = request.body
-      User.findByEmail(userId).map {
-        user =>
-          val toExpenseReport = jsReport.as[User => ExpenseReport]
-          val expenseReport = toExpenseReport(user)
-          expenseReport.save()
-          Ok(toJson(expenseReport))
-      }.getOrElse(
-        Redirect(routes.Application.login())
-      )
-  }
-  def update(id: String) = IsAuthenticated(parse.json) {
+  def create = update(None)
+
+  def update(id: Option[String]) = IsAuthenticated(parse.json) {
     userId => implicit request =>
       val jsReport: JsValue = request.body
       User.findByEmail(userId).map {
@@ -68,11 +57,11 @@ object ExpenseReportController extends Controller with Secured {
         Redirect(routes.Application.login())
       )
   }
+
   def emailXebia(expenseReport:ExpenseReport,user:User)(implicit request:Request[Any]):Result={
     implicit def filepart2Attachment(filePart:FilePart[Array[Byte]])={
       Attachment(filePart.filename, filePart.ref,filePart.contentType.getOrElse("application/octet-stream"),Disposition.Attachment)
     }
-//    impossible de relire les fichiers ecrits dans mongo pour l'instant !!
     val files: Seq[Attachment] = expenseReport.lines.flatMap({
       line => line.evidences.map(Evidence.findById(_))
     }).map(filepart2Attachment(_))
