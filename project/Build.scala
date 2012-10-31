@@ -10,11 +10,12 @@ object ApplicationBuild extends Build {
   val play_salat_plugin: ModuleID = ("se.radley" %% "play-plugins-salat" % "1.0.9").excludeAll(ExclusionRule("play"))
   val gridFs: ModuleID = "org.mongodb" %% "casbah-gridfs" % "2.4.1"
   val apache_poi = "org.apache.poi" % "poi" % "3.8"
+  val apache_poi_xss = "org.apache.poi" % "poi-ooxml" % "3.8"
   val mailer="nl.rhinofly" %% "api-ses" % "1.0"
 
   val appDependencies = {
     Seq(
-      embed_mongo, play_salat_plugin, gridFs, apache_poi,mailer
+      embed_mongo, play_salat_plugin, gridFs, apache_poi,mailer,apache_poi_xss
     )
   }
 

@@ -6,13 +6,15 @@ class ExcelGenerator {
 
   import java.io.File
   import java.io.FileOutputStream
-  import org.apache.poi.hssf.usermodel._
+  import org.apache.poi.hssf.usermodel.HSSFWorkbook
+  import org.apache.poi.ss.usermodel._
+  import org.apache.poi.xssf.usermodel._
   import models._
 
-  lazy val workBook = new HSSFWorkbook(getClass.getResourceAsStream(ExcelGenerator.TEMPLATE_PATH))
+  lazy val workBook:Workbook = new XSSFWorkbook(getClass.getResourceAsStream(ExcelGenerator.TEMPLATE_PATH))
 
   def generate(user: User, expenseReport: ExpenseReport) = {
-    val sheet: HSSFSheet = workBook.getSheet("Note de frais")
+    val sheet: Sheet = workBook.getSheet("Note de frais")
     sheet.getRow(11).getCell(5).setCellValue(user.name)
     sheet.getRow(11).getCell(14).setCellValue(expenseReport.from)
     sheet.getRow(13).getCell(14).setCellValue(expenseReport.to)
@@ -24,16 +26,16 @@ class ExcelGenerator {
     this
   }
 
-  def lineToRow(sheet: HSSFSheet,lineWithIndex: (ExpenseLine, Int)) = {
+  def lineToRow(sheet: Sheet,lineWithIndex: (ExpenseLine, Int)) = {
     val index = lineWithIndex._2
     val line = lineWithIndex._1
     val templateRow = sheet.getRow(ExcelGenerator.TEMPLATE_ROW_AT)
-    val row: HSSFRow = createRow(sheet, templateRow)
+    val row: Row = createRow(sheet, templateRow)
     row.getCell(3).setCellValue(line.valueDate)
     row.getCell(4).setCellValue(index)
     row.getCell(5).setCellValue(line.account)
     row.getCell(6).setCellValue(line.description)
-    val cell: HSSFCell = line.expense match {
+    val cell: Cell = line.expense match {
       case Lodging(amount) => row.getCell(7)
       case Transportation(amount) => row.getCell(8)
       case Gas(amount) => row.getCell(9)
@@ -47,9 +49,9 @@ class ExcelGenerator {
     sheet
   }
 
-  def createRow(sheet: HSSFSheet, templateRow: HSSFRow): HSSFRow = {
+  def createRow(sheet: Sheet, templateRow: Row): Row = {
     sheet.shiftRows(ExcelGenerator.INSERT_ROW_AT,sheet.getLastRowNum, 1, true, false)
-    val row: HSSFRow = sheet.createRow(ExcelGenerator.INSERT_ROW_AT)
+    val row: Row = sheet.createRow(ExcelGenerator.INSERT_ROW_AT)
     (0 until 17).map({
       col =>
         createCell(row, col, templateRow)
@@ -57,8 +59,8 @@ class ExcelGenerator {
     row
   }
 
-  def createCell(row: HSSFRow, col: Int, templateRow: HSSFRow): HSSFCell = {
-    val cell: HSSFCell = row.createCell(col)
+  def createCell(row: Row, col: Int, templateRow: Row): Cell = {
+    val cell: Cell = row.createCell(col)
     cell.setCellStyle(templateRow.getCell(col).getCellStyle)
     cell
   }
@@ -66,7 +68,7 @@ class ExcelGenerator {
   def writeFile(path: String) {
     val file = new File(path)
     val fileOut = new FileOutputStream(file)
-    workBook.setForceFormulaRecalculation(true);
+    workBook.setForceFormulaRecalculation(true)
     workBook.write(fileOut)
     fileOut.close()
   }
@@ -78,7 +80,7 @@ class ExcelGenerator {
 }
 
 object ExcelGenerator {
-  val TEMPLATE_PATH = "/public/template.xls"
+  val TEMPLATE_PATH = "/public/template.xlsx"
   val TEMPLATE_ROW_AT = 16
   val INSERT_ROW_AT = 17
 }

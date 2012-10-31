@@ -41,10 +41,10 @@ class ExpenseReportSpec extends Specification {
         val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
         ExpenseReport(new ObjectId("111111111111111111111111"), date, date, user.id, Seq(),Some(ExpenseStatus.SUBMITTED))
           .addLine(date, "xebia", "description", Internet(15.99),Seq())
-          .addLine(date, "xebia", "description", Internet(15.99),Seq()).save
+          .addLine(date, "xebia", "description", Internet(15.99),Seq()).save()
         ExpenseReport(new ObjectId(), date, date, user.id, Seq(),Some(ExpenseStatus.SUBMITTED))
           .addLine(date, "xebia", "description", Internet(15.99),Seq())
-          .addLine(date, "xebia", "description", Internet(15.99),Seq()).save
+          .addLine(date, "xebia", "description", Internet(15.99),Seq()).save()
         t // execute t inside a http session
       }
     }
@@ -57,7 +57,7 @@ class ExpenseReportSpec extends Specification {
       val expenseReport = ExpenseReport(new ObjectId(), date, date, new ObjectId(), Seq(),Some(ExpenseStatus.SUBMITTED))
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
         .addLine(date, "xebia", "description", Internet(15.99),Seq())
-      expenseReport.save
+      expenseReport.save()
       ExpenseReport.count() === 1
     }
   }
@@ -116,7 +116,7 @@ class ExpenseReportSpec extends Specification {
   }
   step(after())
 
-  def after() = {
+  def after() {
     mongod.stop()
     mongodExe.cleanup()
   }
