@@ -7,7 +7,7 @@ import models.User
 object UserController extends Controller with Secured {
 
   def index = IsAuthenticated { userId => implicit request =>
-    val users = User.list();
+    val users = User.list()
     Ok(toJson(users))
   }
   
