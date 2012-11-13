@@ -34,6 +34,20 @@ class ExcelGeneratorSpec extends Specification {
       sheet.getRow(17).getCell(12).getNumericCellValue === 1599.95
       sheet.getRow(18).getCell(6).getStringCellValue === "TEST TEST Phone"
       sheet.getRow(18).getCell(11).getNumericCellValue === 5099.95
+
+      sheet.getRow(26).getCell(7).getNumericCellValue === 5099.95
+      sheet.getRow(26).getCell(8).getNumericCellValue === 5099.95
+      sheet.getRow(26).getCell(9).getNumericCellValue === 5099.95
+      sheet.getRow(26).getCell(10).getNumericCellValue === 5099.95
+      sheet.getRow(26).getCell(11).getNumericCellValue === 5099.95
+      sheet.getRow(26).getCell(12).getNumericCellValue === 1599.95
+      sheet.getRow(26).getCell(13).getNumericCellValue === 5099.95
+
+      sheet.getRow(26).getCell(14).getNumericCellValue === 32199.65
+      sheet.getRow(27).getCell(14).getNumericCellValue === 32199.65
+      sheet.getRow(29).getCell(14).getNumericCellValue === 32199.65
+
+
     }
   }
 }
