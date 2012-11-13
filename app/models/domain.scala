@@ -18,8 +18,7 @@ import play.api.mvc.MultipartFormData.FilePart
 import play.api.libs.Files.TemporaryFile
 import com.mongodb.casbah.gridfs.{GridFSDBFile, GridFSInputFile}
 import play.api.Logger
-import io.Source
-import java.io.{ByteArrayOutputStream, ByteArrayInputStream}
+import java.io.{ByteArrayOutputStream}
 
 
 @Salat
@@ -45,6 +44,14 @@ object ExpenseStatus {
 }
 import ExpenseStatus._
 case class ExpenseReport(id: ObjectId, from: Date, to: Date, userId: ObjectId, _lines: Seq[ExpenseLine],status:Option[ExpenseStatusValues]) {
+  def subtotals:Seq[Expense]={
+    val expensesByQualifier: Map[String, Seq[Expense]] = lines.map(_.expense).groupBy(_.qualifier)
+    val subtotalsByQualifier=expensesByQualifier.map({
+      case (qualifier, expenses) => (qualifier, expenses.map(_.amount).foldLeft(0.0)(_ + _))
+    })
+    subtotalsByQualifier.map(Expense.tupleToExpense).toSeq
+  }
+
   lazy val lines = _lines
 
   def addLine(valueDate: Date, account: String, description: String, expense: Expense, evidences:Seq[ObjectId]) = {

@@ -11,16 +11,40 @@ import play.api.test.FakeApplication
 import libs.json.DATE_FORMATTER
 import play.api.libs.json.Json._
 import models.ExpenseFormat._
+import org.specs2.specification.{Step, Fragments}
 
-class ExpenseReportSpec extends Specification {
-  val mongodExe: MongodExecutable = MongoDBRuntime.getDefaultInstance.prepare(new MongodConfig(Version.V2_0, 27181, false))
-  val mongod: MongodProcess = mongodExe.start()
+
+trait Served extends org.specs2.mutable.Specification {
+
+  val port = 27180
+  lazy val mongodExe:MongodExecutable=  MongoDBRuntime.getDefaultInstance.prepare(new MongodConfig(Version.V2_0, 27181, false))
+  lazy val mongod:MongodProcess = mongodExe.start()
+
+  lazy val startMongo={
+    println("Starting mongo")
+    mongod.hashCode()
+  } //BeforeClass
+
+  lazy val stopMongo={
+    println("Killing mongo")
+    mongod.stop()
+    mongodExe.cleanup()
+  } //AfterClass
+}
+class MongoDependantSpec extends Served {
+  override val port = 27181
+  step(startMongo)
+  "whatever" in success
+  step(stopMongo)
+}
+class ExpenseReportSpec extends Served {
+  override val port = 27181
 
   def inMemoryMongoDatabase(source:String,name: String = "default"): Map[String, String] = {
     val dbname: String = "play-test-" + scala.util.Random.nextInt
-    println("\nSource: "+source+": dbname = "+dbname+"\n")
+    println("Source: "+source+": dbname = "+dbname+"")
     Map(
-      ("mongodb."+name+".uri" -> ("mongodb://127.0.0.1:27181/"+dbname))
+      ("mongodb."+name+".uri" -> ("mongodb://127.0.0.1:"+port+"/"+dbname))
     )
   }
 
@@ -49,6 +73,8 @@ class ExpenseReportSpec extends Specification {
       }
     }
   }
+
+  step(startMongo)
 
   "ExpenseReport instance" should {
     "be saved" in emptyApp {
@@ -113,11 +139,20 @@ class ExpenseReportSpec extends Specification {
       val toExpenseReport = jsExpenseReport.as[User => ExpenseReport]
       toExpenseReport(User(userId, "", "", "")) === expenseReport
     }
-  }
-  step(after())
+    "compute subtotal for each expense type" in {
+      val date = DATE_FORMATTER.parse("2012-04-17T00:04:00+0200")
 
-  def after() {
-    mongod.stop()
-    mongodExe.cleanup()
+      val userId: ObjectId = new ObjectId()
+      val expenseReport = ExpenseReport(new ObjectId(), date, date, userId, Seq(),Some(ExpenseStatus.DRAFT))
+        .addLine(date, "xebia", "description", Internet(15.00),Seq())
+        .addLine(date, "xebia", "description", Internet(15.00),Seq())
+        .addLine(date, "xebia", "description", Phone(20.00),Seq())
+        .addLine(date, "xebia", "description", Phone(20.00),Seq())
+      val  expected = Seq(Internet(30.00), Phone(40.00))
+      expenseReport.subtotals == expected
+    }
   }
+
+  step(stopMongo)
+
 }
